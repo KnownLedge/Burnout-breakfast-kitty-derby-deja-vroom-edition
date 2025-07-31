@@ -28,7 +28,13 @@ public class PlayerMovement : MonoBehaviour
     public float driftStartTime = 0.3f;
     public float driftStartTimer = 0f;
     public float driftPower = 0.75f;
+    public float driftCharge = 0f;
+    public float[] driftRequirements = { 3, 6, 9 };
+    public float[] boostStrengths = { 5, 8, 10 };
+    public float boostPower = 0f;
+    public float boostForce = 60f;
 
+    public GameObject[] boostSignals;
 
     public float extraGravity = 9.8f;
 
@@ -83,6 +89,21 @@ public class PlayerMovement : MonoBehaviour
             isDrifting = false;
             startDrifting = false;
             driftStartTimer = 0f;
+
+            if(driftCharge > driftRequirements[2])
+            {
+                boostPower = boostStrengths[2];
+            }else if(driftCharge > driftRequirements[1])
+            {
+                boostPower = boostStrengths[1];
+            }else if(driftCharge > driftRequirements[0])
+            {
+                boostPower = boostStrengths[0];
+            }
+
+
+                driftCharge = 0f;
+
            //Reset drift states
         }
 
@@ -108,6 +129,7 @@ public class PlayerMovement : MonoBehaviour
             float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
             //If drifting into direction, will be 1.5, if drifting away, will be 0.5
             Steer(driftDirection, control * driftPower);
+            driftCharge += control;
             //steer with drift change
         }else if (Input.GetButtonUp("Jump")) //Release drift
         {
@@ -128,11 +150,45 @@ public class PlayerMovement : MonoBehaviour
         kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
         kartModel.transform.Rotate(0, plrKart.transform.eulerAngles.y, 0);
 
+
+        if (driftCharge > driftRequirements[2])
+        {
+            boostSignals[2].SetActive(true);
+            boostSignals[0].SetActive(false);
+            boostSignals[1].SetActive(false);
+        }
+        else if (driftCharge > driftRequirements[1])
+        {
+            boostSignals[1].SetActive(true);
+            boostSignals[0].SetActive(false);
+            boostSignals[2].SetActive(false);
+        }
+        else if (driftCharge > driftRequirements[0])
+        {
+            boostSignals[0].SetActive(true);
+            boostSignals[1].SetActive(false);
+            boostSignals[2].SetActive(false);
+        }
+        else
+        {
+            boostSignals[0].SetActive(false);
+            boostSignals[1].SetActive(false);
+            boostSignals[2].SetActive(false);
+        }
+        
+
     }
     private void FixedUpdate()
     {
         //Forward Acceleration
-        plrObjRb.AddForce(plrKart.transform.forward * currentSpeed, ForceMode.Acceleration);
+        if (boostPower > 0) {
+            plrObjRb.AddForce(plrKart.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
+
+        } else
+        {
+            plrObjRb.AddForce(plrKart.transform.forward * currentSpeed, ForceMode.Acceleration);
+        }
+           
 
         Vector3 hVelocity = plrObjRb.velocity;
         hVelocity.y = 0;
@@ -152,7 +208,7 @@ public class PlayerMovement : MonoBehaviour
         {
             driftStartTimer += Time.deltaTime;
         }
-
+        boostPower -= Time.deltaTime;
     }
 
     private void LateUpdate()
