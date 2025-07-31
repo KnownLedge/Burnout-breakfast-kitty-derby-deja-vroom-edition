@@ -288,9 +288,9 @@ MonoBehaviour:
   plrKart: {fileID: 0}
   kartModel: {fileID: 0}
   plrObjRb: {fileID: 0}
-  acceleration: 15
-  topSpeed: 17
-  speedDecay: 1.2
+  acceleration: 100
+  topSpeed: 300
+  speedDecay: 1.1
   turnRate: 20
   currentSpeed: 0
   currentRotate: 0
