@@ -161,7 +161,7 @@ Transform:
   m_GameObject: {fileID: 2558522085608657152}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.57, z: 0}
   m_LocalScale: {x: 2.0175, y: 1, z: 2.1001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -263,8 +263,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4915128266062320988}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071066, z: -0, w: 0.707107}
-  m_LocalPosition: {x: -8.6, y: -115.9, z: 204.4}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -286,10 +286,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   plrObj: {fileID: 0}
   plrKart: {fileID: 0}
+  kartModel: {fileID: 0}
   plrObjRb: {fileID: 0}
-  acceleration: 3
-  topSpeed: 3
+  acceleration: 15
+  topSpeed: 17
+  speedDecay: 1.2
   turnRate: 20
+  currentSpeed: 0
   currentRotate: 0
 --- !u!1 &7316687937556594597
 GameObject:

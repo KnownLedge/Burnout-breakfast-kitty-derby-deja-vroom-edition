@@ -8,15 +8,16 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     public GameObject plrObj;// Reference to object for gameplay physics and collision
-    public GameObject plrKart; //Reference to Kart model
-
+    public GameObject plrKart; //Reference to Kart model holder
+    public GameObject kartModel; //Reference to the actual kart model
     public Rigidbody plrObjRb; //Reference to rigidbody for game physics
 
     [Header("Movement")]
     public float acceleration;
     public float topSpeed;
+    public float speedDecay; //How much velcity is divided by each fixed step, used to help redirect turning
     public float turnRate;
-    private float currentSpeed;
+    [SerializeField] private float currentSpeed;
     [SerializeField] private float currentRotate;
     private float rotate = 0;
 
@@ -27,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
         {
             plrObj = transform.Find("PlayerObj").gameObject;
             plrKart = transform.Find("PlayerKart").gameObject;
+            kartModel = plrKart.transform.Find("KartModel").gameObject;
         }
         plrObjRb = plrObj.GetComponent<Rigidbody>();
     }
@@ -54,6 +56,17 @@ public class PlayerMovement : MonoBehaviour
         currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f);
         //No idea what the magic number is for
         rotate = 0;
+
+        RaycastHit hitOn;
+        RaycastHit hitNear;
+
+        Physics.Raycast(plrKart.transform.position, Vector3.down, out hitOn, 1.1f);
+        Physics.Raycast(plrKart.transform.position, Vector3.down, out hitNear, 2.0f);
+
+
+        kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
+        kartModel.transform.Rotate(0, plrKart.transform.eulerAngles.y, 0);
+
     }
     private void FixedUpdate()
     {
@@ -63,6 +76,9 @@ public class PlayerMovement : MonoBehaviour
         Vector3 hVelocity = plrObjRb.velocity;
         hVelocity.y = 0;
         hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
+
+        hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
+
         plrObjRb.velocity = new Vector3(hVelocity.x, plrObjRb.velocity.y, hVelocity.z);
 
         Quaternion targetRotation = new Quaternion();
