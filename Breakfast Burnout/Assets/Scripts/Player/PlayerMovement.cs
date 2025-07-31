@@ -27,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private int driftDirection = 0; //direction drift goes in
     public float driftStartTime = 0.3f;
     public float driftStartTimer = 0f;
+    public float driftPower = 0.75f;
+
 
     public float extraGravity = 9.8f;
 
@@ -105,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
         {
             float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
             //If drifting into direction, will be 1.5, if drifting away, will be 0.5
-            Steer(driftDirection, control);
+            Steer(driftDirection, control * driftPower);
             //steer with drift change
         }else if (Input.GetButtonUp("Jump")) //Release drift
         {
