@@ -20,6 +20,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float currentSpeed;
     [SerializeField] private float currentRotate;
     private float rotate = 0;
+    public float hopForce = 20f;
+
+    [SerializeField] private bool isDrifting = false; //Whether player is drifting or not
+    [SerializeField] private bool startDrifting = true; //Whether player is starting to drift or not
+    [SerializeField] private int driftDirection = 0; //direction drift goes in
+    public float driftStartTime = 0.3f;
+    public float driftStartTimer = 0f;
+    public float driftPower = 0.75f;
+
+
+    public float extraGravity = 9.8f;
 
     // Start is called before the first frame update
     void Start()
@@ -36,15 +47,15 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Jump"))
+        if (Input.GetButton("Vertical"))
         {
-            currentSpeed = acceleration;
+            currentSpeed = acceleration * Input.GetAxisRaw("Vertical");
         }
         else
         {
             currentSpeed = 0;
         }
-        if(Input.GetAxisRaw("Horizontal") != 0)
+        if(Input.GetAxisRaw("Horizontal") != 0 && !startDrifting)
         {
             int dir = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
             //Get input as either -1 to 1
@@ -52,6 +63,56 @@ public class PlayerMovement : MonoBehaviour
             Steer(dir, amount);
         }
 
+        //Gravity
+        plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+
+
+        //Drift
+        if (Input.GetButtonDown("Jump") && !isDrifting) //Drift Hop
+        {
+            startDrifting = true;
+            //Start state for getting into drift
+            driftStartTimer = 0f;
+            //Start timer for getting into drift, updates every frame
+            plrObjRb.AddForce(plrKart.transform.up * hopForce, ForceMode.Impulse);
+            //Drift hop
+
+        }
+        else if (Input.GetButtonUp("Jump")) //Release drift
+        {
+            isDrifting = false;
+            startDrifting = false;
+            driftStartTimer = 0f;
+           //Reset drift states
+        }
+
+        if(driftStartTimer > driftStartTime) //Check for drift state when hop ends
+        {
+            if (Input.GetAxis("Horizontal") != 0) //Player is moving left/right
+            {
+                isDrifting = true;
+                startDrifting = false;
+                driftStartTimer = 0f; //Reset timer to stop if statement retriggering
+                driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                //Start drift
+                
+            }
+            else//Player is not moving left/right, we will not drift
+            {
+                startDrifting = false;
+            }
+        }
+
+        if (isDrifting) //Player is actively drifting
+        {
+            float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
+            //If drifting into direction, will be 1.5, if drifting away, will be 0.5
+            Steer(driftDirection, control * driftPower);
+            //steer with drift change
+        }else if (Input.GetButtonUp("Jump")) //Release drift
+        {
+            isDrifting = false;
+        }
 
         currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f);
         //No idea what the magic number is for
@@ -86,7 +147,12 @@ public class PlayerMovement : MonoBehaviour
 
         plrKart.transform.rotation = Quaternion.Lerp(plrKart.transform.rotation, targetRotation, Time.deltaTime * 5f);
         //Still no idea about the magic 5f number
-        
+
+        if (startDrifting)
+        {
+            driftStartTimer += Time.deltaTime;
+        }
+
     }
 
     private void LateUpdate()

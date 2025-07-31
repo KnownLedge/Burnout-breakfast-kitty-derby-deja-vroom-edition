@@ -566,6 +566,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: topSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: speedDecay
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: acceleration
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4915128266062320988, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
       propertyPath: m_Name
