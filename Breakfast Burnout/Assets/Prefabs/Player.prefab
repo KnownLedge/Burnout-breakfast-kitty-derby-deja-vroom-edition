@@ -284,16 +284,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cbdfd7fc8802c04b99112c1803ea039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plrObj: {fileID: 0}
-  plrKart: {fileID: 0}
-  kartModel: {fileID: 0}
-  plrObjRb: {fileID: 0}
-  acceleration: 100
-  topSpeed: 300
-  speedDecay: 1.1
+  plrObj: {fileID: 118092939427355276}
+  plrKart: {fileID: 8127721057741285870}
+  kartModel: {fileID: 2558522085608657152}
+  plrObjRb: {fileID: 7262894617650963615}
+  acceleration: 200
+  topSpeed: 400
+  speedDecay: 1.05
   turnRate: 20
   currentSpeed: 0
-  currentRotate: 0
+  currentRotate: 0.0038644106
+  hopForce: 8
+  isDrifting: 0
+  startDrifting: 0
+  driftDirection: 1
+  driftStartTime: 0.3
+  driftStartTimer: 0
+  extraGravity: 9.8
 --- !u!1 &7316687937556594597
 GameObject:
   m_ObjectHideFlags: 0
