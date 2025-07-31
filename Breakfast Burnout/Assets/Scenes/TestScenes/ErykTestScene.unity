@@ -46660,6 +46660,21 @@ PrefabInstance:
       propertyPath: acceleration
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: extraGravity
+      value: 9.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: driftRequirements.Array.data[0]
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: driftRequirements.Array.data[1]
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 4915128266062320988, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
       propertyPath: m_Name
@@ -47336,7 +47351,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1223432170}
+  m_Mesh: {fileID: 1161444623}
 --- !u!33 &1366354378
 MeshFilter:
   m_ObjectHideFlags: 10
