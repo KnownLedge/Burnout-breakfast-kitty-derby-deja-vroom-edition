@@ -78,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
             //Start state for getting into drift
             driftStartTimer = 0f;
             //Start timer for getting into drift, updates every frame
-            plrObjRb.AddForce(plrKart.transform.up * hopForce * Time.deltaTime, ForceMode.Impulse);
+            plrObjRb.AddForce(plrKart.transform.up * hopForce, ForceMode.Impulse);
             //Drift hop
 
         }
