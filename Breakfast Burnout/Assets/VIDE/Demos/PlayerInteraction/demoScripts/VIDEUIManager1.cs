@@ -263,7 +263,7 @@ public class VIDEUIManager1 : MonoBehaviour
         VD.EndDialogue();
 
         VD.SaveState("VIDEDEMOScene1", true); //Saves VIDE stuff related to EVs and override start nodes
-        QuestChartDemo.SaveProgress(); //saves OUR custom game data
+        //QuestChartDemo.SaveProgress(); //saves OUR custom game data
     }
 
     void OnDisable()
