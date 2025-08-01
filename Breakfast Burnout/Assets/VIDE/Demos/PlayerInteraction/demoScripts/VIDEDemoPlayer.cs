@@ -11,7 +11,7 @@ public class VIDEDemoPlayer : MonoBehaviour
 
     //Reference to our diagUI script for quick access
     public VIDEUIManager1 diagUI;
-    public QuestChartDemo questUI;
+    //public QuestChartDemo questUI;
     public Animator blue;
 
     //Stored current VA when inside a trigger
@@ -91,13 +91,13 @@ public class VIDEDemoPlayer : MonoBehaviour
                 assigned = rHit.collider.GetComponent<VIDE_Assign>();
             else return;
 
-            if (assigned.alias == "QuestUI")
-            {
-                questUI.Interact(); //Begins interaction with Quest Chart
-            } else
-            {
-                diagUI.Interact(assigned); //Begins interaction
-            }
+            //if (assigned.alias == "QuestUI")
+            //{
+            //    questUI.Interact(); //Begins interaction with Quest Chart
+            //} else
+            //{
+            //    diagUI.Interact(assigned); //Begins interaction
+            //}
         }
     }
 }
