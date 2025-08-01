@@ -77,6 +77,15 @@ public class CheckpointSystem : MonoBehaviour
         if(entity.CompareTag("Player"))
         {
             entity.transform.position = checkpoints[currentPlayerCheckpoint].gameObject.transform.position;
+            entity.transform.rotation = checkpoints[currentPlayerCheckpoint].gameObject.transform.rotation;
+            entity.transform.Rotate(0,-90f,0);
+            PlayerMovement playerScript = entity.transform.parent.GetComponent<PlayerMovement>();
+            if (playerScript != null) { 
+            playerScript.plrKart.transform.rotation = checkpoints[currentPlayerCheckpoint].gameObject.transform.rotation;
+                playerScript.plrKart.transform.Rotate(0, -90f, 0);
+                playerScript.RespawnStats();
+                //Call a function to reset players acceleration
+            }
         }
         if (entity.CompareTag("NPC Racer"))
         {

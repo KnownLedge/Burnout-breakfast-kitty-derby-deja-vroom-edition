@@ -221,4 +221,16 @@ public class PlayerMovement : MonoBehaviour
         rotate = (turnRate *  direction) * amount;
     }
 
+
+    public void RespawnStats()
+    {
+        Debug.Log("stats resetting");
+        currentSpeed = 0;
+        boostPower = 0;
+        driftCharge = 0;
+        plrObjRb.velocity = Vector3.zero;
+        plrObjRb.angularVelocity = Vector3.zero;
+        //Reset spin
+    }
+
 }
