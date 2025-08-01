@@ -127,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
             float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
             //If drifting into direction, will be 1.5, if drifting away, will be 0.5
             Steer(driftDirection, control * driftPower);
-            driftCharge += control;
+            driftCharge += control * Time.deltaTime;
             //steer with drift change
         }else if (Input.GetButtonUp("Jump")) //Release drift
         {
