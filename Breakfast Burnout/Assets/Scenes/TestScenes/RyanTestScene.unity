@@ -13492,7 +13492,7 @@ MonoBehaviour:
   aiKart: {fileID: 1085954015}
   kartModel: {fileID: 1845297570}
   physObjRb: {fileID: 0}
-  acceleration: 500
+  acceleration: 300
   topSpeed: 800
   speedDecay: 1.3
   turnRate: 8
@@ -14733,13 +14733,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
+      propertyPath: hopForce
+      value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
       propertyPath: acceleration
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
       propertyPath: extraGravity
-      value: 9.8
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
