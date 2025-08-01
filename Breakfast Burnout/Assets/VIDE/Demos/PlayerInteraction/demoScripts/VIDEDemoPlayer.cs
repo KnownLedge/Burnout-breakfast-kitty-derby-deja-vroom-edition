@@ -35,8 +35,8 @@ public class VIDEDemoPlayer : MonoBehaviour
 
     void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
@@ -58,14 +58,14 @@ public class VIDEDemoPlayer : MonoBehaviour
         }
 
         //Hide/Show cursor
-        if (Input.GetMouseButtonDown(0))
-        {
-            Cursor.visible = !Cursor.visible;
-            if (Cursor.visible)
-                Cursor.lockState = CursorLockMode.None;
-            else
-                Cursor.lockState = CursorLockMode.Locked;
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Cursor.visible = !Cursor.visible;
+        //    if (Cursor.visible)
+        //        Cursor.lockState = CursorLockMode.None;
+        //    else
+        //        Cursor.lockState = CursorLockMode.Locked;
+        //}
     }
 
     //Casts a ray to see if we hit an NPC and, if so, we interact

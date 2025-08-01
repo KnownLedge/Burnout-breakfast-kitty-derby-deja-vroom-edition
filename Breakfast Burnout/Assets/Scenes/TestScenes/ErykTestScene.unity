@@ -8414,7 +8414,7 @@ Transform:
   m_GameObject: {fileID: 257269711}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.8, z: 0}
+  m_LocalPosition: {x: 0, y: -2.5, z: 0}
   m_LocalScale: {x: 14.550023, y: 14.550023, z: 14.550023}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8639,7 +8639,7 @@ MonoBehaviour:
   playerChoicePrefab: {fileID: 65416241}
   playerSprite: {fileID: 731829550}
   playerLabel: {fileID: 1873947050}
-  player: {fileID: 0}
+  player: {fileID: 1292084622}
 --- !u!43 &265386129
 Mesh:
   m_ObjectHideFlags: 0
