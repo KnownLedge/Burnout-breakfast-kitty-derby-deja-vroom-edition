@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class RivalRace : AiRace
 {
+
+
+    public PlayerMovement playerRef;
+
     public enum RivalState {Regular, Rush, What};
     public RivalState State;
     public CheckpointSystem checkRef;
     public List<Transform> rushPoints;
     public float rushTime = 1.5f;
     public float rushTimer = 0f; //Should make private later
+    public float playerDist = 0f;
+
 
     [SerializeField] private bool hasRushed = false;
 
@@ -23,7 +29,6 @@ public class RivalRace : AiRace
             GameObject.Find("Checkpoint System").GetComponent<CheckpointSystem>();
             //Failsafe attempt to get checkpoint system if one is not manually set.
         }
-
     }
 
     new void Update()
@@ -53,6 +58,8 @@ public class RivalRace : AiRace
                 }
                 rushPoints.Add(wayPoints[1]);
 
+                playerDist = Vector3.Distance(playerRef.plrObj.transform.position, checkRef.checkpoints[0].transform.position);
+
                 State = RivalState.Rush;
             }
 
@@ -61,7 +68,17 @@ public class RivalRace : AiRace
         {
             rushTimer += Time.deltaTime;
             float rushLerp = rushTimer / rushTime; //Get percentage completion of rushtimer for lerp
-            if(rushLerp > 1)
+
+            float playerLerp = 1.1f - (Vector3.Distance(playerRef.plrObj.transform.position, checkRef.checkpoints[0].transform.position) / playerDist);
+            Debug.Log("playlerp: " + playerLerp + " otherlerp " + rushLerp);
+            //Get percentage value of how close player is to finish line
+            if(playerLerp > rushLerp)
+            {
+                rushLerp = playerLerp;
+                rushTimer = rushTime * rushLerp;
+            }
+
+            if (rushLerp > 1)
             {
                 rushLerp = 1;
                 hasRushed = true;
