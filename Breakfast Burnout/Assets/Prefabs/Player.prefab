@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6581636663961492176}
   - component: {fileID: 7262894617650963615}
   - component: {fileID: 5089896279782332368}
+  - component: {fileID: 7330303799747496984}
   m_Layer: 0
   m_Name: PlayerObj
   m_TagString: Player
@@ -135,6 +136,25 @@ Rigidbody:
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &5089896279782332368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118092939427355276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724c581402efcfe4ea820123fa9c998e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: VIDE User
+  diagUI: {fileID: 0}
+  questUI: {fileID: 0}
+  blue: {fileID: 0}
+  inTrigger: {fileID: 0}
+  demo_Items: []
+  demo_ItemInventory: []
+--- !u!114 &7330303799747496984
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -524,7 +544,7 @@ MonoBehaviour:
   turnRate: 20
   currentSpeed: 0
   currentRotate: 0.40855098
-  hopForce: 25
+  hopForce: 15
   isDrifting: 0
   startDrifting: 0
   driftDirection: 0
@@ -533,9 +553,9 @@ MonoBehaviour:
   driftPower: 0.75
   driftCharge: 0
   driftRequirements:
+  - 0.7
   - 1.2
-  - 1.7
-  - 3
+  - 2
   boostStrengths:
   - 3
   - 5
