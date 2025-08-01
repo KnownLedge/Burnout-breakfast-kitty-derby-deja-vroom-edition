@@ -8790,13 +8790,18 @@ PrefabInstance:
     - target: {fileID: 367669586217845602, guid: b28f21f1b9ea0444bb4674cec7f98d91,
         type: 3}
       propertyPath: npcRacerReferences.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 367669586217845602, guid: b28f21f1b9ea0444bb4674cec7f98d91,
         type: 3}
       propertyPath: npcRacerReferences.Array.data[0]
       value: 
       objectReference: {fileID: 600374334}
+    - target: {fileID: 367669586217845602, guid: b28f21f1b9ea0444bb4674cec7f98d91,
+        type: 3}
+      propertyPath: npcRacerReferences.Array.data[1]
+      value: 
+      objectReference: {fileID: 537480585}
     - target: {fileID: 2760905270517919352, guid: b28f21f1b9ea0444bb4674cec7f98d91,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9548,7 +9553,7 @@ Transform:
   m_GameObject: {fileID: 257330167}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -146.9, y: -21.2, z: 60.3}
+  m_LocalPosition: {x: -139.1, y: -21.2, z: 42.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13487,9 +13492,9 @@ MonoBehaviour:
   aiKart: {fileID: 1085954015}
   kartModel: {fileID: 1845297570}
   physObjRb: {fileID: 0}
-  acceleration: 300
-  topSpeed: 500
-  speedDecay: 1.2
+  acceleration: 500
+  topSpeed: 800
+  speedDecay: 1.3
   turnRate: 8
   currentSpeed: 0
   currentRotate: 0
@@ -13520,11 +13525,13 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   targetIndex: 0
   npcRacerIndex: 0
+  playerRef: {fileID: 2045211147}
   State: 0
   checkRef: {fileID: 1893959017}
   rushPoints: []
   rushTime: 2
   rushTimer: 0
+  playerDist: 0
   hasRushed: 0
   rushCheckPoint: 3
 --- !u!4 &337114481
@@ -35328,7 +35335,7 @@ Transform:
   m_GameObject: {fileID: 921686308}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -109.63, y: -22.6, z: 38.1}
+  m_LocalPosition: {x: -73.4, y: -22.6, z: 38.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -80452,6 +80459,18 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &2045211147 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 351728131}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cbdfd7fc8802c04b99112c1803ea039, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2055652914
 GameObject:
   m_ObjectHideFlags: 0
