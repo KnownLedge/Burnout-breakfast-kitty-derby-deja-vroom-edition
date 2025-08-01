@@ -5,21 +5,22 @@ using UnityEngine;
 
 public class CheckpointSystem : MonoBehaviour
 {
-    [SerializeField] private int lapsRequiredToWin; //Set in the inspector
+    [SerializeField] public int lapsRequiredToWin; //Set in the inspector
 
-    [SerializeField] private Checkpoint[] checkpoints; //Assign in the inspector
+    [SerializeField] public Checkpoint[] checkpoints; //Assign in the inspector
 
 
     [SerializeField] private GameObject playerReference; //Assign in the inspector
 
     [HideInInspector] public int currentPlayerCheckpoint;
-    private int currentPlayerLap;
+    public int currentPlayerLap;
 
+    //Note, moved some of these variables public so the Rival cpu can tell if the player is close to winning or not
 
     [SerializeField] private GameObject[] npcRacerReferences; //Assign in the inspector
 
     [HideInInspector] public int[] currentNPCRacerCheckpoints;
-    private int[] currentNPCRacerLaps;
+    public int[] currentNPCRacerLaps;
 
     [SerializeField] int playerPosition;
 
@@ -114,7 +115,6 @@ public class CheckpointSystem : MonoBehaviour
             }
         }
     }
-
     IEnumerator UpdateRacePosition()
     {
         while (raceActive)

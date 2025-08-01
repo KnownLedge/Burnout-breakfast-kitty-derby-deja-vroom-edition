@@ -69,8 +69,6 @@ public class PlayerMovement : MonoBehaviour
             Steer(dir, amount);
         }
 
-        //Gravity
-        plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
 
 
         //Drift
@@ -209,6 +207,13 @@ public class PlayerMovement : MonoBehaviour
             driftStartTimer += Time.deltaTime;
         }
         boostPower -= Time.deltaTime;
+
+
+        //Gravity
+        plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+
+
+
     }
 
     private void LateUpdate()
