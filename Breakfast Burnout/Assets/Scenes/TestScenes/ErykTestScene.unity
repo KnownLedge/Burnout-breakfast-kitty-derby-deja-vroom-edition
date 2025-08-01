@@ -9189,31 +9189,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!1 &293702963 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 118092939427355276, guid: c4d2081eb1856c949957fa066f5fe8bf,
-    type: 3}
-  m_PrefabInstance: {fileID: 1292084620}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &293702965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 293702963}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 724c581402efcfe4ea820123fa9c998e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerName: VIDE User
-  diagUI: {fileID: 259932698}
-  questUI: {fileID: 0}
-  blue: {fileID: 0}
-  inTrigger: {fileID: 0}
-  demo_Items: []
-  demo_ItemInventory: []
 --- !u!43 &302590352
 Mesh:
   m_ObjectHideFlags: 0
@@ -47911,31 +47886,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
-        type: 3}
-      propertyPath: hopForce
-      value: 4000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
-        type: 3}
-      propertyPath: acceleration
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
-        type: 3}
-      propertyPath: extraGravity
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
-        type: 3}
-      propertyPath: driftRequirements.Array.data[0]
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
-        type: 3}
-      propertyPath: driftRequirements.Array.data[1]
-      value: 300
-      objectReference: {fileID: 0}
     - target: {fileID: 4915128266062320988, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
       propertyPath: m_Name
@@ -47991,14 +47941,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7330303799747496984, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: diagUI
+      value: 
+      objectReference: {fileID: 259932698}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 118092939427355276, guid: c4d2081eb1856c949957fa066f5fe8bf,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 293702965}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4d2081eb1856c949957fa066f5fe8bf, type: 3}
 --- !u!1001 &1295375392
 PrefabInstance:
