@@ -8393,13 +8393,14 @@ MonoBehaviour:
   - Example4_dialogue
   - Item_LookUp
   - Laura
+  - LOOP_pirate
   - MrCube
   - NPCOnly
   - QuestChartDemo
   - test
   - TriggeredDude
   - Witch
-  assignedIndex: 12
+  assignedIndex: 13
   assignedID: 84924
   assignedDialogue: test
   interactionCount: 0
@@ -8409,7 +8410,7 @@ MonoBehaviour:
   defaultPlayerSprite: {fileID: 0}
   targetManager: {fileID: 0}
   preload: 1
-  notuptodate: 1
+  notuptodate: 0
   startp: 0
   loadtag: 
   langs: []
@@ -8448,7 +8449,7 @@ MonoBehaviour:
     isPlayer: 0
   - commentCount: 1
     s_comment:
-    - text: you want some loops?
+    - text: may you want some loops?
       extraData: ExtraData
       inputSetIndex: 2
       outputNodeIndex: -1
@@ -47946,7 +47947,8 @@ PrefabInstance:
       propertyPath: diagUI
       value: 
       objectReference: {fileID: 259932698}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5089896279782332368, guid: c4d2081eb1856c949957fa066f5fe8bf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
