@@ -26,6 +26,7 @@ public class CheckpointSystem : MonoBehaviour
 
     bool raceActive = true; //True while player is still racing
 
+    public PositionText uiRefPos;
     void Start()
     {
         currentPlayerCheckpoint = 0;
@@ -119,15 +120,15 @@ public class CheckpointSystem : MonoBehaviour
     {
         while (raceActive)
         {
-            playerPosition = npcRacerReferences.Count() + 1; //Default player to last place
+           int newPlayerPosition = npcRacerReferences.Count() + 1; //Default player to last place
             for (int i = 0; i < npcRacerReferences.Count(); i++)
             {
                 if (currentNPCRacerLaps[i] < currentPlayerLap)
                 {
-                    playerPosition--; //Player is a lap ahead of Npc
+                    newPlayerPosition--; //Player is a lap ahead of Npc
                 }else if (currentNPCRacerLaps[i] == currentPlayerLap && currentNPCRacerCheckpoints[i] < currentPlayerCheckpoint)
                 {
-                    playerPosition--; //Player is at least one checkpoint ahead of Npc
+                    newPlayerPosition--; //Player is at least one checkpoint ahead of Npc
                 }else if(currentNPCRacerLaps[i] == currentPlayerLap && currentNPCRacerCheckpoints[i] == currentPlayerCheckpoint)
                 {
                     //Player and opponent Npc are tied on checkpoints, have to use distance check to see if player is ahead
@@ -146,13 +147,20 @@ public class CheckpointSystem : MonoBehaviour
                     if(playDist < npcDist)
                     {
                         //Player is closer to reaching next checkpoint, therefore they are ahead.
-                        playerPosition--;
+                        newPlayerPosition--;
                     }
                 }
 
 
             }
-
+            if(newPlayerPosition != playerPosition)
+            {
+                playerPosition = newPlayerPosition;
+                if (uiRefPos != null)
+                {
+                    uiRefPos.updatePosText(newPlayerPosition);
+                }
+            }
             yield return new WaitForSeconds(0.1f);
         }
     }
