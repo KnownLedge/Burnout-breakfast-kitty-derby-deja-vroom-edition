@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CheckpointSystem : MonoBehaviour
@@ -20,6 +21,9 @@ public class CheckpointSystem : MonoBehaviour
     [HideInInspector] public int[] currentNPCRacerCheckpoints;
     private int[] currentNPCRacerLaps;
 
+    [SerializeField] int playerPosition;
+
+    bool raceActive = true; //True while player is still racing
 
     void Start()
     {
@@ -35,6 +39,7 @@ public class CheckpointSystem : MonoBehaviour
             currentNPCRacerCheckpoints[i] = 0;
             currentNPCRacerLaps[i] = 0;
         }
+        StartCoroutine(UpdateRacePosition()); //Figure out what position in the race the player is in (1st, 2nd, 3rd, etc)
     }
 
     //On passing a checkpoint, check if the player has completed a lap, or won the game.
@@ -107,6 +112,48 @@ public class CheckpointSystem : MonoBehaviour
                 npcScript.RespawnStats();
             
             }
+        }
+    }
+
+    IEnumerator UpdateRacePosition()
+    {
+        while (raceActive)
+        {
+            playerPosition = npcRacerReferences.Count() + 1; //Default player to last place
+            for (int i = 0; i < npcRacerReferences.Count(); i++)
+            {
+                if (currentNPCRacerLaps[i] < currentPlayerLap)
+                {
+                    playerPosition--; //Player is a lap ahead of Npc
+                }else if (currentNPCRacerLaps[i] == currentPlayerLap && currentNPCRacerCheckpoints[i] < currentPlayerCheckpoint)
+                {
+                    playerPosition--; //Player is at least one checkpoint ahead of Npc
+                }else if(currentNPCRacerLaps[i] == currentPlayerLap && currentNPCRacerCheckpoints[i] == currentPlayerCheckpoint)
+                {
+                    //Player and opponent Npc are tied on checkpoints, have to use distance check to see if player is ahead
+                    int targetCheckpoint = currentPlayerCheckpoint + 1;
+
+                    if (targetCheckpoint == checkpoints.Length) //If players are headed for the last checkpoint
+                    {
+                        targetCheckpoint = 0;
+                    }
+
+                        float playDist = Vector3.Distance(playerReference.transform.position, checkpoints[targetCheckpoint].transform.position);
+                    //Get player distance to next checkpoint
+                    float npcDist = Vector3.Distance(npcRacerReferences[i].transform.position, checkpoints[targetCheckpoint].transform.position);
+                    //Get npc distance to next checkpoint
+
+                    if(playDist < npcDist)
+                    {
+                        //Player is closer to reaching next checkpoint, therefore they are ahead.
+                        playerPosition--;
+                    }
+                }
+
+
+            }
+
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }
