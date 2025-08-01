@@ -11,14 +11,14 @@ public class CheckpointSystem : MonoBehaviour
 
     [SerializeField] private GameObject playerReference; //Assign in the inspector
 
-    public int currentPlayerCheckpoint;
-    public int currentPlayerLap;
+    [HideInInspector] public int currentPlayerCheckpoint;
+    private int currentPlayerLap;
 
 
     [SerializeField] private GameObject[] npcRacerReferences; //Assign in the inspector
 
-    public int[] currentNPCRacerCheckpoints;
-    public int[] currentNPCRacerLaps;
+    [HideInInspector] public int[] currentNPCRacerCheckpoints;
+    private int[] currentNPCRacerLaps;
 
 
     void Start()
