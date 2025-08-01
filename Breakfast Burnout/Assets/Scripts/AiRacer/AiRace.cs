@@ -117,4 +117,14 @@ public class AiRace : MonoBehaviour
     }
 
 
+    public void RespawnStats()
+    {
+        Debug.Log("stats resetting");
+        currentSpeed = 0;
+
+        physObjRb.velocity = Vector3.zero;
+        physObjRb.angularVelocity = Vector3.zero;
+        //Reset spin
+    }
+
 }

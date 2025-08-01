@@ -79,10 +79,15 @@ public class CheckpointSystem : MonoBehaviour
             entity.transform.position = checkpoints[currentPlayerCheckpoint].gameObject.transform.position;
             entity.transform.rotation = checkpoints[currentPlayerCheckpoint].gameObject.transform.rotation;
             entity.transform.Rotate(0,-90f,0);
+            //Checkpoints face to the right, turn 90 degrees left to face the track
+
             PlayerMovement playerScript = entity.transform.parent.GetComponent<PlayerMovement>();
+
             if (playerScript != null) { 
             playerScript.plrKart.transform.rotation = checkpoints[currentPlayerCheckpoint].gameObject.transform.rotation;
+
                 playerScript.plrKart.transform.Rotate(0, -90f, 0);
+                //Checkpoints face to the right, turn 90 degrees left to face the track
                 playerScript.RespawnStats();
                 //Call a function to reset players acceleration
             }
@@ -90,6 +95,18 @@ public class CheckpointSystem : MonoBehaviour
         if (entity.CompareTag("NPC Racer"))
         {
             entity.transform.position = checkpoints[currentNPCRacerCheckpoints[entity.GetComponentInParent<AiRace>().npcRacerIndex]].gameObject.transform.position;
+            entity.transform.rotation = checkpoints[currentPlayerCheckpoint].gameObject.transform.rotation;
+            entity.transform.Rotate(0, -90f, 0);
+
+            AiRace npcScript = entity.transform.parent.GetComponent<AiRace>();
+            if (npcScript != null) { 
+            npcScript.aiKart.transform.rotation = checkpoints[currentPlayerCheckpoint].gameObject.transform.rotation;
+
+                npcScript.aiKart.transform.Rotate(0, -90f, 0);
+                
+                npcScript.RespawnStats();
+            
+            }
         }
     }
 }
