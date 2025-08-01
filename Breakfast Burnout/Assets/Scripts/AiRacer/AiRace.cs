@@ -30,7 +30,7 @@ public class AiRace : MonoBehaviour
     public int npcRacerIndex; //For use in the checkpoint system: number each npc racer, starting from 0
 
     // Start is called before the first frame update
-    void Start()
+    internal void Start()
     {
         if (physObj == null)
         {
@@ -44,7 +44,7 @@ public class AiRace : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    internal void Update()
     {
             currentSpeed = acceleration * 1; //Always accelerate, these lot got their foot stuck on the gas pedal
 
@@ -70,7 +70,7 @@ public class AiRace : MonoBehaviour
         Physics.Raycast(aiKart.transform.position, Vector3.down, out hitNear, 2.0f);
 
 
-        kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
+        kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * turnRate);
         kartModel.transform.Rotate(0, aiKart.transform.eulerAngles.y, 0);
 
 
