@@ -35,21 +35,21 @@ public class VIDEDemoPlayer : MonoBehaviour
 
     void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
 
         //Only allow player to move and turn if there are no dialogs loaded
-        if (!VD.isActive)
-        {
-            transform.Rotate(0, Input.GetAxis("Mouse X") * 5, 0);
-            float move = Input.GetAxisRaw("Vertical");
-            transform.position += transform.forward * 7 * move * Time.deltaTime;
-            blue.SetFloat("speed", move);
-        }
+        //if (!VD.isActive)
+        //{
+        //    transform.Rotate(0, Input.GetAxis("Mouse X") * 5, 0);
+        //    float move = Input.GetAxisRaw("Vertical");
+        //    transform.position += transform.forward * 7 * move * Time.deltaTime;
+        //    blue.SetFloat("speed", move);
+        //}
 
         //Interact with NPCs when pressing E
         if (Input.GetKeyDown(KeyCode.E))
@@ -58,14 +58,14 @@ public class VIDEDemoPlayer : MonoBehaviour
         }
 
         //Hide/Show cursor
-        if (Input.GetMouseButtonDown(0))
-        {
-            Cursor.visible = !Cursor.visible;
-            if (Cursor.visible)
-                Cursor.lockState = CursorLockMode.None;
-            else
-                Cursor.lockState = CursorLockMode.Locked;
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Cursor.visible = !Cursor.visible;
+        //    if (Cursor.visible)
+        //        Cursor.lockState = CursorLockMode.None;
+        //    else
+        //        Cursor.lockState = CursorLockMode.Locked;
+        //}
     }
 
     //Casts a ray to see if we hit an NPC and, if so, we interact
@@ -83,7 +83,7 @@ public class VIDEDemoPlayer : MonoBehaviour
 
         RaycastHit rHit;
 
-        if (Physics.Raycast(transform.position, transform.forward, out rHit, 2))
+        if (Physics.Raycast(transform.position, transform.forward, out rHit, 4))
         {
             //Lets grab the NPC's VIDE_Assign script, if there's any
             VIDE_Assign assigned;
