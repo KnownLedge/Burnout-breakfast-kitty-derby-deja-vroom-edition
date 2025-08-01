@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7475524219094733172}
   m_Layer: 0
   m_Name: NpcObj
-  m_TagString: Untagged
+  m_TagString: NPC Racer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 7856670565936103193}
   m_Layer: 0
   m_Name: NPCRacer
-  m_TagString: Untagged
+  m_TagString: NPC Racer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

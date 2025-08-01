@@ -27,6 +27,8 @@ public class AiRace : MonoBehaviour
     public Transform currentTarget;
     public int targetIndex = 0;
 
+    public int npcRacerIndex; //For use in the checkpoint system: number each npc racer, starting from 0
+
     // Start is called before the first frame update
     void Start()
     {
