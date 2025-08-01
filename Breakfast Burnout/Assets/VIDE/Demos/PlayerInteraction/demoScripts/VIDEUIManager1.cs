@@ -462,10 +462,10 @@ public class VIDEUIManager1 : MonoBehaviour
     //Check task progression
     void CheckTasks()
     {
-        if (player.demo_ItemInventory.Count == 5)
-            QuestChartDemo.SetQuest(2, false);
+        //if (player.demo_ItemInventory.Count == 5)
+        //    QuestChartDemo.SetQuest(2, false);
 
-        QuestChartDemo.CheckTaskCompletion(VD.nodeData);
+        //QuestChartDemo.CheckTaskCompletion(VD.nodeData);
     }
 
     #endregion

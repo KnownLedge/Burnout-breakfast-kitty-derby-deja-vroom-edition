@@ -43,13 +43,13 @@ public class VIDEDemoPlayer : MonoBehaviour
     {
 
         //Only allow player to move and turn if there are no dialogs loaded
-        if (!VD.isActive)
-        {
-            transform.Rotate(0, Input.GetAxis("Mouse X") * 5, 0);
-            float move = Input.GetAxisRaw("Vertical");
-            transform.position += transform.forward * 7 * move * Time.deltaTime;
-            blue.SetFloat("speed", move);
-        }
+        //if (!VD.isActive)
+        //{
+        //    transform.Rotate(0, Input.GetAxis("Mouse X") * 5, 0);
+        //    float move = Input.GetAxisRaw("Vertical");
+        //    transform.position += transform.forward * 7 * move * Time.deltaTime;
+        //    blue.SetFloat("speed", move);
+        //}
 
         //Interact with NPCs when pressing E
         if (Input.GetKeyDown(KeyCode.E))
@@ -83,7 +83,7 @@ public class VIDEDemoPlayer : MonoBehaviour
 
         RaycastHit rHit;
 
-        if (Physics.Raycast(transform.position, transform.forward, out rHit, 2))
+        if (Physics.Raycast(transform.position, transform.forward, out rHit, 4))
         {
             //Lets grab the NPC's VIDE_Assign script, if there's any
             VIDE_Assign assigned;
