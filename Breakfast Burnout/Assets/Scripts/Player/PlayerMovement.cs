@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 //Reference video
 //https://www.youtube.com/watch?v=Ki-tWT50cEQ&list=PL1R2qsKCcUCKY1p7URUct96O0dorgQnO6
 
@@ -10,38 +11,64 @@ public class PlayerMovement : MonoBehaviour
     public GameObject plrObj;// Reference to object for gameplay physics and collision
     public GameObject plrKart; //Reference to Kart model holder
     public GameObject kartModel; //Reference to the actual kart model
-    public Rigidbody plrObjRb; //Reference to rigidbody for game physics
+    public GameObject turnPointer; //Reference to object in kartmodel to control where object is actually turning
+    private Rigidbody plrObjRb; //Reference to rigidbody for game physics
+    public GameObject[] boostSignals;
 
-    [Header("Movement")]
+    [Header("Speed")]
     public float acceleration;
     public float topSpeed;
     public float speedDecay; //How much velcity is divided by each fixed step, used to help redirect turning
-    public float turnRate;
-    [SerializeField] private float currentSpeed;
-    [SerializeField] private float currentRotate;
-    private float rotate = 0;
-    public float hopForce = 20f;
 
-    [SerializeField] private bool isDrifting = false; //Whether player is drifting or not
-    [SerializeField] private bool startDrifting = true; //Whether player is starting to drift or not
-    [SerializeField] private int driftDirection = 0; //direction drift goes in
-    public float driftStartTime = 0.3f;
-    public float driftStartTimer = 0f;
+    [Header("Turning")]
+    public float turnRate;
+ 
+    public enum DriftStates { Steering, StartDrift, Drifting };
+    [Header("States")]
+    public DriftStates state = DriftStates.Steering;
+
+    [Header("DriftHop")]
+    public float hopTime; //How long the hop last before gravity kicks in
+    public float hopForce;
+    public float driftGrav; //Extra gravity while drifting
+
+
+    [Header("Drifting")]
     public float driftPower = 0.75f;
-    public float driftCharge = 0f;
+    public float driftPivot; //How much the drift changes the turn angle by while drift is active
     public float[] driftRequirements = { 3, 6, 9 };
     public float[] boostStrengths = { 5, 8, 10 };
-    public float boostPower = 0f;
+    public float[] boostBursts = { 5, 8, 10 };
     public float boostForce = 60f;
 
-    public GameObject[] boostSignals;
+    public float visualTurn = 45f;
 
+    [Header("MISC")]
     public float extraGravity = 9.8f;
+    public float groundDist = 3f;
 
-    // Start is called before the first frame update
+    [Header("DEBUG")]
+    //SPEED
+    [SerializeField] private float currentSpeed;
+
+    //TURNING
+    [SerializeField] private float currentRotate;
+    [SerializeField] private float rotate = 0;
+
+    //DRIFT HOP
+    [SerializeField] private bool canHop = true;
+    [SerializeField] private float hopTimer;
+
+    //DRIFTING
+    [SerializeField] private int driftDirection;
+    [SerializeField] private float driftCharge = 0f;
+    [SerializeField] private float boostPower = 0f;
+
+
+
     void Start()
     {
-        if(plrObj == null)
+        if (plrObj == null)
         {
             plrObj = transform.Find("PlayerObj").gameObject;
             plrKart = transform.Find("PlayerKart").gameObject;
@@ -53,6 +80,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //ACCELERATION
         if (Input.GetButton("Vertical"))
         {
             currentSpeed = acceleration * Input.GetAxisRaw("Vertical");
@@ -61,77 +89,79 @@ public class PlayerMovement : MonoBehaviour
         {
             currentSpeed = 0;
         }
-        if(Input.GetAxisRaw("Horizontal") != 0 && !startDrifting)
+
+
+        //STEERING
+        if (Input.GetAxisRaw("Horizontal") != 0 && state != DriftStates.StartDrift)
         {
             int dir = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
             //Get input as either -1 to 1
             float amount = Mathf.Abs(Input.GetAxis("Horizontal"));
             Steer(dir, amount);
         }
-
-
-
-        //Drift
-        if (Input.GetButtonDown("Jump") && !isDrifting) //Drift Hop
+        
+        //DRIFTING
+        if(Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop)
         {
-            startDrifting = true;
-            //Start state for getting into drift
-            driftStartTimer = 0f;
-            //Start timer for getting into drift, updates every frame
-            plrObjRb.AddForce(plrKart.transform.up * hopForce, ForceMode.Impulse);
+            state = DriftStates.StartDrift;
+            //Start process of drifting
+            hopTimer = 0f;
+            //reset timer
+
+            canHop = false;
+
+            plrObjRb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
             //Drift hop
 
-        }
-        else if (Input.GetButtonUp("Jump")) //Release drift
+        }else if (Input.GetButtonUp("Jump"))
         {
-            isDrifting = false;
-            startDrifting = false;
-            driftStartTimer = 0f;
+            state = DriftStates.Steering;
+            hopTimer = 0f;
+            //Reset timer
 
-            if(driftCharge > driftRequirements[2])
-            {
-                boostPower = boostStrengths[2];
-            }else if(driftCharge > driftRequirements[1])
-            {
-                boostPower = boostStrengths[1];
-            }else if(driftCharge > driftRequirements[0])
-            {
-                boostPower = boostStrengths[0];
-            }
+            turnPointer.transform.forward = plrKart.transform.forward;
+            kartModel.transform.forward = plrKart.transform.forward;
+            DriftBoost();
+            //Activate DriftBoost
 
-
-                driftCharge = 0f;
-
-           //Reset drift states
         }
 
-        if(driftStartTimer > driftStartTime) //Check for drift state when hop ends
+        RaycastHit groundHit;
+
+        if(Physics.Raycast(plrKart.transform.position, Vector3.down, out groundHit, groundDist))
         {
-            if (Input.GetAxis("Horizontal") != 0) //Player is moving left/right
+            canHop = true;
+            if (state == DriftStates.StartDrift && hopTimer > hopTime)
             {
-                isDrifting = true;
-                startDrifting = false;
-                driftStartTimer = 0f; //Reset timer to stop if statement retriggering
-                driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
-                //Start drift
-                
+                if (Input.GetAxisRaw("Horizontal") != 0)
+                {// If moving left/right, starting a drift and the timer for starting a drift is up
+                    state = DriftStates.Drifting;
+                    Debug.Log("DRifting now!");
+                    //Then start a drift
+                    driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                    //Get drift direction to hold throughout drift
+
+                    turnPointer.transform.forward = plrKart.transform.forward;
+                    turnPointer.transform.Rotate(new Vector3(0,driftPivot * driftDirection,0));
+                    
+                }
+                else//Direction was not held when drift should start, cancel drift
+                {
+                    state = DriftStates.Steering;
+                    hopTimer = 0f;
+                }
+
             }
-            else//Player is not moving left/right, we will not drift
-            {
-                startDrifting = false;
-            }
+            
         }
 
-        if (isDrifting) //Player is actively drifting
+        if(state == DriftStates.Drifting)
         {
             float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
             //If drifting into direction, will be 1.5, if drifting away, will be 0.5
             Steer(driftDirection, control * driftPower);
             driftCharge += control * Time.deltaTime;
             //steer with drift change
-        }else if (Input.GetButtonUp("Jump")) //Release drift
-        {
-            isDrifting = false;
         }
 
         currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f);
@@ -147,6 +177,10 @@ public class PlayerMovement : MonoBehaviour
 
         kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
         kartModel.transform.Rotate(0, plrKart.transform.eulerAngles.y, 0);
+        if(state == DriftStates.Drifting)
+        {
+            kartModel.transform.Rotate(new Vector3(0, visualTurn * -driftDirection, 0));
+        }
 
 
         if (driftCharge > driftRequirements[2])
@@ -173,20 +207,22 @@ public class PlayerMovement : MonoBehaviour
             boostSignals[1].SetActive(false);
             boostSignals[2].SetActive(false);
         }
-        
+
 
     }
     private void FixedUpdate()
     {
-        //Forward Acceleration
-        if (boostPower > 0) {
-            plrObjRb.AddForce(plrKart.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
-
-        } else
+        if (boostPower > 0)
         {
-            plrObjRb.AddForce(plrKart.transform.forward * currentSpeed, ForceMode.Acceleration);
+            plrObjRb.AddForce(turnPointer.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
+
         }
-           
+        else
+        {
+            plrObjRb.AddForce(turnPointer.transform.forward * currentSpeed, ForceMode.Acceleration);
+        }
+
+        //Turnpointer faces the same way as player kart, but will be turned when drifting to make turning go at an odd angle
 
         Vector3 hVelocity = plrObjRb.velocity;
         hVelocity.y = 0;
@@ -196,18 +232,26 @@ public class PlayerMovement : MonoBehaviour
 
         plrObjRb.velocity = new Vector3(hVelocity.x, plrObjRb.velocity.y, hVelocity.z);
 
+
         Quaternion targetRotation = new Quaternion();
-        targetRotation =  Quaternion.Euler(new Vector3(0, plrKart.transform.eulerAngles.y + currentRotate, 0));
+        targetRotation = Quaternion.Euler(new Vector3(0, plrKart.transform.eulerAngles.y + currentRotate, 0));
 
         plrKart.transform.rotation = Quaternion.Lerp(plrKart.transform.rotation, targetRotation, Time.deltaTime * 5f);
         //Still no idea about the magic 5f number
 
-        if (startDrifting)
-        {
-            driftStartTimer += Time.deltaTime;
-        }
-        boostPower -= Time.deltaTime;
 
+        if(state == DriftStates.StartDrift || state == DriftStates.Drifting)
+        {
+            hopTimer += Time.deltaTime;
+
+            if(hopTimer > hopTime)
+            {
+                plrObjRb.AddForce(Vector3.down * driftGrav, ForceMode.Acceleration);
+                //Apply extra force to keep player to floor while drifting
+            }
+        }
+
+        boostPower -= Time.deltaTime;
 
         //Gravity
         plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
@@ -223,9 +267,33 @@ public class PlayerMovement : MonoBehaviour
 
     public void Steer(int direction, float amount)
     {
-        rotate = (turnRate *  direction) * amount;
+        rotate = (turnRate * direction) * amount;
     }
 
+
+    private void DriftBoost()
+    {
+        if (driftCharge > driftRequirements[2])
+        {
+            boostPower = boostStrengths[2];
+            plrObjRb.AddForce(plrKart.transform.forward * boostBursts[2], ForceMode.Impulse);
+        }
+        else if (driftCharge > driftRequirements[1])
+        {
+            boostPower = boostStrengths[1];
+            plrObjRb.AddForce(plrKart.transform.forward * boostBursts[1], ForceMode.Impulse);
+        }
+        else if (driftCharge > driftRequirements[0])
+        {
+            boostPower = boostStrengths[0];
+            plrObjRb.AddForce(plrKart.transform.forward * boostBursts[0], ForceMode.Impulse);
+        }
+
+
+        driftCharge = 0f;
+
+        //Reset drift states
+    }
 
     public void RespawnStats()
     {

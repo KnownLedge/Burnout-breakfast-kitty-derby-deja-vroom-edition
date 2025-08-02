@@ -535,36 +535,45 @@ MonoBehaviour:
   plrObj: {fileID: 118092939427355276}
   plrKart: {fileID: 8127721057741285870}
   kartModel: {fileID: 2558522085608657152}
-  plrObjRb: {fileID: 7262894617650963615}
+  turnPointer: {fileID: 5805963919707492013}
+  boostSignals:
+  - {fileID: 5583109423924497520}
+  - {fileID: 2000608674614448259}
+  - {fileID: 1831933099923609925}
   acceleration: 100
   topSpeed: 450
   speedDecay: 1.05
   turnRate: 20
-  currentSpeed: 0
-  currentRotate: 0.40855098
+  state: 0
+  hopTime: 0.3
   hopForce: 15
-  isDrifting: 0
-  startDrifting: 0
-  driftDirection: 0
-  driftStartTime: 0.3
-  driftStartTimer: 0
+  driftGrav: 40
   driftPower: 0.75
-  driftCharge: 0
+  driftPivot: -30
   driftRequirements:
-  - 0.7
   - 1.2
+  - 1.7
   - 2
   boostStrengths:
   - 3
   - 5
   - 8
-  boostPower: 0
+  boostBursts:
+  - 5
+  - 8
+  - 10
   boostForce: 60
-  boostSignals:
-  - {fileID: 5583109423924497520}
-  - {fileID: 2000608674614448259}
-  - {fileID: 1831933099923609925}
-  extraGravity: 70
+  visualTurn: 45
+  extraGravity: 60
+  groundDist: 3
+  currentSpeed: 0
+  currentRotate: 0.40855098
+  rotate: 0
+  canHop: 1
+  hopTimer: 0
+  driftDirection: 0
+  driftCharge: 0
+  boostPower: 0
 --- !u!1 &5583109423924497520
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,6 +679,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5805963919707492013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2286209692282330831}
+  m_Layer: 0
+  m_Name: TURNPOINTER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2286209692282330831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5805963919707492013}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7149768262502862590}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7316687937556594597
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,5 +881,6 @@ Transform:
   - {fileID: 3264732712077960703}
   - {fileID: 5047872764196960677}
   - {fileID: 5230685381474736439}
+  - {fileID: 2286209692282330831}
   m_Father: {fileID: 6978093394324898158}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
