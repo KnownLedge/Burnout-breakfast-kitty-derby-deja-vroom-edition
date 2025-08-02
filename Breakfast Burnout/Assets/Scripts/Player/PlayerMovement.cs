@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
     public GameObject turnPointer; //Reference to object in kartmodel to control where object is actually turning
     private Rigidbody plrObjRb; //Reference to rigidbody for game physics
     public GameObject[] boostSignals;
+    public AudioSource audio;
+    public SoundList SL; //List of sounds in script
 
     public VehicleInfo VI; //Reference to vehicle transforms to edit vehicle (Used a struct for visual space sake.)
     public CameraInfo CI; //Same as above, but for the Camera details
@@ -155,6 +157,13 @@ public class PlayerMovement : MonoBehaviour
 
         }else if (Input.GetButtonUp("Jump"))
         {
+
+            audio.Stop();
+            if (state == DriftStates.Drifting)
+            {
+                audio.PlayOneShot(SL.driftEnd);
+            }
+
             state = DriftStates.Steering;
             hopTimer = 0f;
             //Reset timer
@@ -169,6 +178,8 @@ public class PlayerMovement : MonoBehaviour
 
             //Visual
             intendScale = initScale;
+
+
 
         }
 
@@ -192,6 +203,9 @@ public class PlayerMovement : MonoBehaviour
 
                     //Visual
                     driftRotate = 0f;
+                    audio.PlayOneShot(SL.driftStart);
+                    
+
                     
                 }
                 else//Direction was not held when drift should start, cancel drift
@@ -211,6 +225,10 @@ public class PlayerMovement : MonoBehaviour
             Steer(driftDirection, control * driftPower);
             driftCharge += control * Time.deltaTime;
             //steer with drift change
+            if (audio.isPlaying == false)
+            {
+                audio.Play();
+            }
         }
 
         currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f);
@@ -327,6 +345,19 @@ public class PlayerMovement : MonoBehaviour
         //Visual squash and stretch
         kartModel.transform.localScale = Vector3.Lerp(kartModel.transform.localScale, intendScale, Time.deltaTime * rescaleSpeed);
 
+        if(boostPower < 0)
+        {
+            CI.intendFov = CI.defaultFov;
+        }
+        else
+        {
+            CI.intendFov = CI.boostFov;
+        }
+
+            //Camera FOv
+            CI.Camera.fieldOfView = Mathf.Lerp(CI.Camera.fieldOfView, CI.intendFov, Time.deltaTime * CI.fovSpeed);
+
+
     }
 
     private void LateUpdate()
@@ -346,16 +377,19 @@ public class PlayerMovement : MonoBehaviour
         {
             boostPower = boostStrengths[2];
             plrObjRb.AddForce(plrKart.transform.forward * boostBursts[2], ForceMode.Impulse);
+            CI.Camera.fieldOfView = CI.burstFov[2];
         }
         else if (driftCharge > driftRequirements[1])
         {
             boostPower = boostStrengths[1];
             plrObjRb.AddForce(plrKart.transform.forward * boostBursts[1], ForceMode.Impulse);
+            CI.Camera.fieldOfView = CI.burstFov[1];
         }
         else if (driftCharge > driftRequirements[0])
         {
             boostPower = boostStrengths[0];
             plrObjRb.AddForce(plrKart.transform.forward * boostBursts[0], ForceMode.Impulse);
+            CI.Camera.fieldOfView = CI.burstFov[0];
         }
 
 
