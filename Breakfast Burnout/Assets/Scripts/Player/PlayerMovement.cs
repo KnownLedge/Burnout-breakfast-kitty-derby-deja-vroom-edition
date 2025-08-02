@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody plrObjRb; //Reference to rigidbody for game physics
     public GameObject[] boostSignals;
 
+    public VehicleInfo VI; //Reference to vehicle transforms to edit vehicle (Used a struct for visual space sake.)
+
     [Header("Speed")]
     public float acceleration;
     public float topSpeed;
@@ -93,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
         }
         plrObjRb = plrObj.GetComponent<Rigidbody>();
         initScale = kartModel.transform.localScale;
+        intendScale = initScale;
     }
 
     // Update is called once per frame
@@ -116,10 +119,24 @@ public class PlayerMovement : MonoBehaviour
             //Get input as either -1 to 1
             float amount = Mathf.Abs(Input.GetAxis("Horizontal"));
             Steer(dir, amount);
+
+
         }
-        
+
+        //Visual
+        VI.steerFRotate = Mathf.Lerp(VI.steerFRotate, VI.frontTurnRange * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
+        VI.frontSect.rotation = new Quaternion();
+        VI.frontSect.Rotate(0, VI.steerFRotate, 0);
+        VI.steerBRotate = Mathf.Lerp(VI.steerBRotate, VI.backTurnRange * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
+        VI.rearSect.rotation = new Quaternion();
+        VI.rearSect.Rotate(0, VI.steerBRotate, 0);
+        VI.tiltRotate = Mathf.Lerp(VI.tiltRotate, VI.catTilt * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
+        VI.cat.rotation = new Quaternion();
+        VI.cat.Rotate(0, 0, VI.tiltRotate);
+
+
         //DRIFTING
-        if(Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop)
+        if (Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop)
         {
             state = DriftStates.StartDrift;
             //Start process of drifting
