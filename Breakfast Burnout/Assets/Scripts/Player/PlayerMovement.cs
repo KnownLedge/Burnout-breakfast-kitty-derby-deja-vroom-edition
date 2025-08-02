@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     public VehicleInfo VI; //Reference to vehicle transforms to edit vehicle (Used a struct for visual space sake.)
     public CameraInfo CI; //Same as above, but for the Camera details
 
+    [SerializeField] private UIManager uiManagerReference;
+
     [Header("Speed")]
     public float acceleration;
     public float topSpeed;
@@ -105,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         //ACCELERATION
-        if (Input.GetButton("Vertical"))
+        if (Input.GetButton("Vertical") && Time.timeScale == 1)
         {
             currentSpeed = acceleration * Input.GetAxisRaw("Vertical");
         }
@@ -116,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         //STEERING
-        if (Input.GetAxisRaw("Horizontal") != 0 && state != DriftStates.StartDrift)
+        if (Input.GetAxisRaw("Horizontal") != 0 && state != DriftStates.StartDrift && Time.timeScale == 1)
         {
             int dir = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
             //Get input as either -1 to 1
@@ -139,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         //DRIFTING
-        if (Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop)
+        if (Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop && Time.timeScale == 1)
         {
             state = DriftStates.StartDrift;
             //Start process of drifting
@@ -284,7 +286,19 @@ public class PlayerMovement : MonoBehaviour
             boostSignals[2].SetActive(false);
         }
 
-
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            if (!uiManagerReference.pauseMenuPanel.activeSelf && Time.timeScale == 1)
+            {
+                Time.timeScale = 0; //Pause time.
+                uiManagerReference.pauseMenuPanel.SetActive(true);
+            }
+            else if (uiManagerReference.pauseMenuPanel.activeSelf && Time.timeScale == 0)
+            {
+                Time.timeScale = 1; //Unpause time.
+                uiManagerReference.pauseMenuPanel.SetActive(false);
+            }
+        }
     }
     private void FixedUpdate()
     {
