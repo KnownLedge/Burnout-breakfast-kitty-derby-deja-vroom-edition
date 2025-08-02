@@ -15,7 +15,8 @@ public class RivalRace : AiRace
     public float rushTime = 1.5f;
     public float rushTimer = 0f; //Should make private later
     public float playerDist = 0f;
-
+    public AudioSource audio;
+    public AudioClip rushSound;
 
     [SerializeField] private bool hasRushed = false;
 
@@ -61,6 +62,7 @@ public class RivalRace : AiRace
                 playerDist = Vector3.Distance(playerRef.plrObj.transform.position, checkRef.checkpoints[0].transform.position);
 
                 State = RivalState.Rush;
+                audio.PlayOneShot(rushSound);
             }
 
         }
