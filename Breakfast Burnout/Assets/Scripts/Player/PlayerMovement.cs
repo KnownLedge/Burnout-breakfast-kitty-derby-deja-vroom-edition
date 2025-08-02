@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject[] boostSignals;
 
     public VehicleInfo VI; //Reference to vehicle transforms to edit vehicle (Used a struct for visual space sake.)
+    public CameraInfo CI; //Same as above, but for the Camera details
 
     [Header("Speed")]
     public float acceleration;
@@ -230,6 +231,17 @@ public class PlayerMovement : MonoBehaviour
             driftRotate = Mathf.Lerp(driftRotate, visualTurn + (visualIncrement * Input.GetAxisRaw("Horizontal") * driftDirection), Time.deltaTime * 8f);
             //Lerp the rotation for drifing, adding on extra turn depdning on the direction player is holding relative to the drift
             kartModel.transform.Rotate(new Vector3(0, driftRotate * -driftDirection, 0));
+            Vector3 camTargetPos = CI.Camera.transform.localPosition;
+            camTargetPos.x = 0;
+            camTargetPos.x += CI.pivotDist * driftDirection;
+            CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
+
+        }
+        else
+        {
+            Vector3 camTargetPos = CI.Camera.transform.localPosition;
+            camTargetPos.x = 0;
+            CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
         }
 
 
