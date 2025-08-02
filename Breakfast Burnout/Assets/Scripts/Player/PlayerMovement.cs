@@ -101,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
         }
         
         //DRIFTING
-        if(Input.GetButtonDown("Jump") && state == DriftStates.Steering)
+        if(Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop)
         {
             state = DriftStates.StartDrift;
             //Start process of drifting
