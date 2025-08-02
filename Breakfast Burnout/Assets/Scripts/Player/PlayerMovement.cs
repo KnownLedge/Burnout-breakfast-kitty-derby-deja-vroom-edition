@@ -204,9 +204,9 @@ public class PlayerMovement : MonoBehaviour
                     //Visual
                     driftRotate = 0f;
                     audio.PlayOneShot(SL.driftStart);
-                    
+                    audio.Play();
 
-                    
+
                 }
                 else//Direction was not held when drift should start, cancel drift
                 {
@@ -225,10 +225,6 @@ public class PlayerMovement : MonoBehaviour
             Steer(driftDirection, control * driftPower);
             driftCharge += control * Time.deltaTime;
             //steer with drift change
-            if (audio.isPlaying == false)
-            {
-                audio.Play();
-            }
         }
 
         currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f);

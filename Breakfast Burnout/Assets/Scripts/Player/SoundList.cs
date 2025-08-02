@@ -8,6 +8,5 @@ public class SoundList : MonoBehaviour
     public AudioClip driftHold;
     public AudioClip driftEnd;
 
-    public static AudioClip rivalRush;
 
 }

@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
 
     public void MainMenuStart()
     {
-        SceneManager.LoadScene("RyanTestScene");
+        SceneManager.LoadScene("ErykTestScene");
     }
 
     public void MainMenuSettings()
@@ -54,6 +54,11 @@ public class UIManager : MonoBehaviour
     public void PauseMenuToMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void PauseMenuResume()
+    {
+        //Reverse whatever was used to pause
     }
 
     public void PauseMenuSettings()
