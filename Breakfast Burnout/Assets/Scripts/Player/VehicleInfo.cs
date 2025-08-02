@@ -16,6 +16,8 @@ public class VehicleInfo : MonoBehaviour
     public float frontTurnRange = 5f;
     public float backTurnRange = 3f;
     public float catTilt = 15f;
+    public float frontWheelSpeed = 10f;
+    public float backWheelSPeed = 5f;
 
     //PRACTICAL
     [HideInInspector] public float steerFRotate = 0f;

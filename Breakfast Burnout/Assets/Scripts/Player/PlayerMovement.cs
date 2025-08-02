@@ -278,6 +278,12 @@ public class PlayerMovement : MonoBehaviour
         hVelocity.y = 0;
         hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
+        //Visual: Making wheel speed match horizontal velocity
+        VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
+        VI.rearWheels.Rotate(0, hVelocity.magnitude * VI.backWheelSPeed, 0);
+
+
+
         hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
 
         plrObjRb.velocity = new Vector3(hVelocity.x, plrObjRb.velocity.y, hVelocity.z);
