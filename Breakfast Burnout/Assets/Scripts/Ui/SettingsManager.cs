@@ -52,7 +52,11 @@ public class SettingsManager : MonoBehaviour
         //Update the setting sliders, toggles etc on Start().
         musicVolumeSlider.value = musicVolume;
         sfxVolumeSlider.value = sfxVolume;
-        fullScreenToggle.isOn = Screen.fullScreen;
+
+
+        // ------ No fullscreen/resolution stuff: web game -------
+
+        /*fullScreenToggle.isOn = Screen.fullScreen;
 
         resolutions = Screen.resolutions; //Fill the array with all the resolutions the player can use.
         userRefreshRate = Screen.currentResolution.refreshRate; //Get the player's current refresh rate.
@@ -81,10 +85,10 @@ public class SettingsManager : MonoBehaviour
 
         resolutionDropdownMenu.AddOptions(dropdownOptions); //Add all the options to the dropdown menu.
         resolutionDropdownMenu.value = defaultResolutionIndex; //Set the default option.
-        resolutionDropdownMenu.RefreshShownValue(); //Refresh the dropdown menu.
+        resolutionDropdownMenu.RefreshShownValue(); //Refresh the dropdown menu.*/
     }
 
-    public void ChangeResolution(int userResInput)
+    /*public void ChangeResolution(int userResInput)
     {
         Resolution theTargetResolution = filteredResolutions[userResInput]; //Using the user input, select the corresponding resolution from the filtered list made in Start().
         Screen.SetResolution(theTargetResolution.width, theTargetResolution.height, userFullscreenPreference); //Set the actual resolution.
@@ -94,7 +98,7 @@ public class SettingsManager : MonoBehaviour
     {
         userFullscreenPreference = userFullscreenInput; //Read the value into a variable which can also be used above. ^
         Screen.fullScreen = userFullscreenPreference; //Set the actual fullscreen preference.
-    }
+    }*/
 
     public void BackgroundMusicVolumeSliderChanged()
     {
