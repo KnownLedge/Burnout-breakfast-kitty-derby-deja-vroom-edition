@@ -43,6 +43,13 @@ public class PlayerMovement : MonoBehaviour
 
     public float visualTurn = 45f;
 
+    [Header("Visual")]
+    public float rescaleSpeed = 1f;
+    public Vector3 hopStretch = new Vector3(1, 1.5f, 1);
+    public Vector3 driftSquash = new Vector3(1, 0.8f, 1);
+
+
+
     [Header("MISC")]
     public float extraGravity = 9.8f;
     public float groundDist = 3f;
@@ -64,6 +71,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float driftCharge = 0f;
     [SerializeField] private float boostPower = 0f;
 
+    //VISUAL
+    [SerializeField] private Vector3 initScale; //Original scale of object
+    [SerializeField] private Vector3 intendScale;// Intended scale of object in current time in gameplay
 
 
     void Start()
@@ -75,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
             kartModel = plrKart.transform.Find("KartModel").gameObject;
         }
         plrObjRb = plrObj.GetComponent<Rigidbody>();
+        initScale = kartModel.transform.localScale;
     }
 
     // Update is called once per frame
@@ -113,6 +124,10 @@ public class PlayerMovement : MonoBehaviour
             plrObjRb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
             //Drift hop
 
+            //VISUAL
+            kartModel.transform.localScale = hopStretch;
+            intendScale = driftSquash;
+
         }else if (Input.GetButtonUp("Jump"))
         {
             state = DriftStates.Steering;
@@ -121,8 +136,14 @@ public class PlayerMovement : MonoBehaviour
 
             turnPointer.transform.forward = plrKart.transform.forward;
             kartModel.transform.forward = plrKart.transform.forward;
+
+
+
             DriftBoost();
             //Activate DriftBoost
+
+            //Visual
+            intendScale = initScale;
 
         }
 
@@ -256,7 +277,8 @@ public class PlayerMovement : MonoBehaviour
         //Gravity
         plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
 
-
+        //Visual squash and stretch
+        kartModel.transform.localScale = Vector3.Lerp(kartModel.transform.localScale, intendScale, Time.deltaTime * rescaleSpeed);
 
     }
 
