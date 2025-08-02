@@ -41,9 +41,13 @@ public class PlayerMovement : MonoBehaviour
     public float[] boostBursts = { 5, 8, 10 };
     public float boostForce = 60f;
 
-    public float visualTurn = 45f;
+
 
     [Header("Visual")]
+
+    public float visualTurn = 45f;
+    public float visualIncrement = 5f;
+
     public float rescaleSpeed = 1f;
     public Vector3 hopStretch = new Vector3(1, 1.5f, 1);
     public Vector3 driftSquash = new Vector3(1, 0.8f, 1);
@@ -72,6 +76,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float boostPower = 0f;
 
     //VISUAL
+
+    [SerializeField] private float driftRotate = 0f;
+
     [SerializeField] private Vector3 initScale; //Original scale of object
     [SerializeField] private Vector3 intendScale;// Intended scale of object in current time in gameplay
 
@@ -164,6 +171,9 @@ public class PlayerMovement : MonoBehaviour
 
                     turnPointer.transform.forward = plrKart.transform.forward;
                     turnPointer.transform.Rotate(new Vector3(0,driftPivot * driftDirection,0));
+
+                    //Visual
+                    driftRotate = 0f;
                     
                 }
                 else//Direction was not held when drift should start, cancel drift
@@ -200,7 +210,9 @@ public class PlayerMovement : MonoBehaviour
         kartModel.transform.Rotate(0, plrKart.transform.eulerAngles.y, 0);
         if(state == DriftStates.Drifting)
         {
-            kartModel.transform.Rotate(new Vector3(0, visualTurn * -driftDirection, 0));
+            driftRotate = Mathf.Lerp(driftRotate, visualTurn + (visualIncrement * Input.GetAxisRaw("Horizontal") * driftDirection), Time.deltaTime * 8f);
+            //Lerp the rotation for drifing, adding on extra turn depdning on the direction player is holding relative to the drift
+            kartModel.transform.Rotate(new Vector3(0, driftRotate * -driftDirection, 0));
         }
 
 
