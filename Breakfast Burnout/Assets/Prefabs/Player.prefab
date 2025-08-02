@@ -548,8 +548,8 @@ MonoBehaviour:
   hopTime: 0.3
   hopForce: 15
   driftGrav: 40
-  driftPower: 0.75
-  driftPivot: -30
+  driftPower: 0.5
+  driftPivot: -25
   driftRequirements:
   - 1.2
   - 1.7
@@ -559,21 +559,21 @@ MonoBehaviour:
   - 5
   - 8
   boostBursts:
-  - 5
-  - 8
   - 10
+  - 40
+  - 70
   boostForce: 60
   visualTurn: 45
   extraGravity: 60
   groundDist: 3
   currentSpeed: 0
-  currentRotate: 0.40855098
+  currentRotate: 0.0000060846805
   rotate: 0
   canHop: 1
   hopTimer: 0
-  driftDirection: 0
+  driftDirection: -1
   driftCharge: 0
-  boostPower: 0
+  boostPower: 4.6000032
 --- !u!1 &5583109423924497520
 GameObject:
   m_ObjectHideFlags: 0
