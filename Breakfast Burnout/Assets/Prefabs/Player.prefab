@@ -149,7 +149,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: VIDE User
   diagUI: {fileID: 0}
-  questUI: {fileID: 0}
   blue: {fileID: 0}
   inTrigger: {fileID: 0}
   demo_Items: []
@@ -168,7 +167,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: VIDE User
   diagUI: {fileID: 0}
-  questUI: {fileID: 0}
   blue: {fileID: 0}
   inTrigger: {fileID: 0}
   demo_Items: []
@@ -738,7 +736,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1500
   field of view: 60
   orthographic: 0
   orthographic size: 5
