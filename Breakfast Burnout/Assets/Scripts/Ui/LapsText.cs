@@ -10,7 +10,7 @@ public class LapsText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        textRef.text = "LAP: " + checkRef.currentPlayerLap;
+        textRef.text = "LAP: " + (checkRef.currentPlayerLap + 1) + "/" + checkRef.lapsRequiredToWin;
 
     }
 }
