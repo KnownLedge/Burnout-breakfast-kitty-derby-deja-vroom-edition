@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DrawLink : MonoBehaviour
 {
-    public static float reachRadius = 4f;
+    public static float reachRadius = 12f;
     void OnDrawGizmos()
     {
         if (gameObject.name == "1")

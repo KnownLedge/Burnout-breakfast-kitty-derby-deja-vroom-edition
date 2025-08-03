@@ -27,6 +27,13 @@ public class CheckpointSystem : MonoBehaviour
     bool raceActive = true; //True while player is still racing
 
     public PositionText uiRefPos;
+
+
+
+    public List<int> raceResults;
+
+    public ResultsScreen resultsScreenRef;
+
     void Start()
     {
         currentPlayerCheckpoint = 0;
@@ -57,7 +64,41 @@ public class CheckpointSystem : MonoBehaviour
             if (currentPlayerLap == lapsRequiredToWin)
             {
                 print("You win! :D");
+                raceResults.Add(5);
+                ForceRaceResults();
             }
+        }
+    }
+
+    public void ForceRaceResults()
+    {
+        for (int i = 0; i < npcRacerReferences.Length; i++)
+        {
+            bool hasFinished = false;
+            foreach (int val in raceResults)
+            {
+                if (val == i)
+                {
+                    if (hasFinished) {
+                        raceResults.RemoveAt(i);
+                        //Racer accidentally finished twice.
+                    }
+                    else
+                    {
+
+                        hasFinished = true;
+                    }
+                    //Racer is in the results list, no need to add them
+                }
+            }
+            if (!hasFinished)
+            {
+                raceResults.Add(i);
+            }
+        }
+        if(resultsScreenRef != null)
+        {
+            resultsScreenRef.gameObject.SetActive(true);
         }
     }
 
@@ -74,6 +115,7 @@ public class CheckpointSystem : MonoBehaviour
             if (currentNPCRacerLaps[npcRacerNumber] == lapsRequiredToWin)
             {
                 print("NPC racer " + (npcRacerNumber + 1) + " won! >:(");
+                raceResults.Add(npcRacerNumber);
             }
         }
     }
