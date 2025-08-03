@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
 
     public void MainMenuStart()
     {
-        SceneManager.LoadScene("ErykTestScene");
+        SceneManager.LoadScene("DanielTestScene");
     }
 
     public void MainMenuSettings()

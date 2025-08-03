@@ -165,7 +165,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 826173278fad0f14c9b35b3d55504418, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1482,6 +1482,7 @@ MonoBehaviour:
   SL: {fileID: 7753253496016988814}
   VI: {fileID: 1715161242456284955}
   CI: {fileID: 6730685476399543925}
+  uiManagerReference: {fileID: 0}
   acceleration: 100
   topSpeed: 450
   speedDecay: 1.05
