@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6392293820372978480}
   m_Layer: 0
   m_Name: LoopCollectable
-  m_TagString: Untagged
+  m_TagString: Collectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,7 +79,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.25
+  m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5833021893341946730
 GameObject:

@@ -72,6 +72,7 @@ public class Collectable : MonoBehaviour
             maxHeight *= 2;
             totalLoops += 1;
             heightLerp = 0;
+            other.transform.parent.GetComponent<PlayerMovement>().GetCollectable();
         }
     }
 
