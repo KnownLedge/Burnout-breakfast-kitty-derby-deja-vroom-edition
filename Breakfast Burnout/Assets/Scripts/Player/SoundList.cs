@@ -9,4 +9,6 @@ public class SoundList : MonoBehaviour
     public AudioClip driftEnd;
     public AudioClip driftHop;
 
+    public AudioClip collectSound;
+
 }

@@ -1453,7 +1453,6 @@ MonoBehaviour:
   - {fileID: 1831933099923609925}
   audio: {fileID: 8048759309286101123}
   SL: {fileID: 7753253496016988814}
-  hopAudio: {fileID: 102995543660816855}
   VI: {fileID: 1715161242456284955}
   CI: {fileID: 6730685476399543925}
   uiManagerReference: {fileID: 0}
@@ -1515,6 +1514,7 @@ MonoBehaviour:
   driftHold: {fileID: 8300000, guid: 826173278fad0f14c9b35b3d55504418, type: 3}
   driftEnd: {fileID: 8300000, guid: bf22df4c7beac3149a566b15cee81c5d, type: 3}
   driftHop: {fileID: 8300000, guid: 0efcd2475a7c95e4b91d3c17b8b6d11f, type: 3}
+  collectSound: {fileID: 8300000, guid: b2760d95621e2f64390d1e75610185e9, type: 3}
 --- !u!1 &5198365873604183440
 GameObject:
   m_ObjectHideFlags: 0

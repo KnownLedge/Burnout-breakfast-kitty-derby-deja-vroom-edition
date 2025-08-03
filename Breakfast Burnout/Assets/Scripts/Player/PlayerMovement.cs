@@ -424,4 +424,17 @@ public class PlayerMovement : MonoBehaviour
         //Reset spin
     }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Collectable")
+        {
+            GetCollectable();
+        }
+    }
+
+    public void GetCollectable()
+    {
+        audio.PlayOneShot(SL.collectSound);
+    }
+
 }

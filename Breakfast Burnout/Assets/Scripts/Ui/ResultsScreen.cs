@@ -55,7 +55,7 @@ public class ResultsScreen : MonoBehaviour
                     FLScript.shouldFill = false;
                     if (checkRef.raceResults[0] == 5)
                     {
-                        SceneManager.LoadScene("MainMenu");
+                        SceneManager.LoadScene("WinMenu");
                     }
                     else
                     {
