@@ -88,15 +88,13 @@ public class UIManager : MonoBehaviour
 
     public void ShowWinScreen()
     {
-       /* Time.timeScale = 0; //Pause time.
-        Cursor.lockState = CursorLockMode.None; //Show the cursor.
-        winScreenPanel.SetActive(true);*/
+        Time.timeScale = 0; //Pause time.
+        winScreenPanel.SetActive(true);
     }
 
     public void WinScreenBackToGame()
     {
-        /*Time.timeScale = 1; //Unpause time.
-        Cursor.lockState = CursorLockMode.Locked; //Hide the cursor.
-        winScreenPanel.SetActive(false);*/
+        Time.timeScale = 1; //Unpause time.
+        winScreenPanel.SetActive(false);
     }
 }
