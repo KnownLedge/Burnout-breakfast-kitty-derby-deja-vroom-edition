@@ -14,6 +14,7 @@ public class CHEATS : MonoBehaviour
     {
         if (other.tag == "Player" && Collectable.totalLoops >= loopRequirement)
         {
+            Collectable.totalLoops -= loopRequirement;
             state = CheatState.Cheat;
             audio.Play();
         }else if(other.tag == "Player")
