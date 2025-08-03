@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ResultsScreen : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public class ResultsScreen : MonoBehaviour
                 if (Vector3.Distance(standingsObj.localPosition, startPos) < 9)
                 {
                     FLScript.shouldFill = false;
+                    SceneManager.LoadScene("ErykTestScene");
                     state = 2;
                 }
             }
