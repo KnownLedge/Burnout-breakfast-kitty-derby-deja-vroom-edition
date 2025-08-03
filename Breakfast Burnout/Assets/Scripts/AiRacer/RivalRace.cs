@@ -22,6 +22,11 @@ public class RivalRace : AiRace
 
     public int rushCheckPoint = 3; //Checkpoint that rival will go into rush mode once player reaches
 
+    public float nerfedAccel = 300f;
+
+    private bool playedBuzzer = false;
+
+    public AudioClip buzzer;
     new void Start()
     {
         base.Start();
@@ -30,6 +35,12 @@ public class RivalRace : AiRace
             GameObject.Find("Checkpoint System").GetComponent<CheckpointSystem>();
             //Failsafe attempt to get checkpoint system if one is not manually set.
         }
+
+        if(CHEATS.state == CHEATS.CheatState.Cheat)
+        {
+            acceleration = nerfedAccel;
+        }
+
     }
 
     new void Update()
@@ -38,7 +49,7 @@ public class RivalRace : AiRace
         {
             base.Update();
 
-            if(checkRef.currentPlayerCheckpoint >= rushCheckPoint && checkRef.currentPlayerLap == checkRef.lapsRequiredToWin - 1 && !hasRushed){
+            if(checkRef.currentPlayerCheckpoint >= rushCheckPoint && checkRef.currentPlayerLap == checkRef.lapsRequiredToWin - 1 && !hasRushed && CHEATS.state == CHEATS.CheatState.Fair){
                 //If player is nearing finish line where we want to rush
 
                 int extraLaps = checkRef.currentPlayerLap - checkRef.currentNPCRacerLaps[npcRacerIndex];
@@ -63,6 +74,10 @@ public class RivalRace : AiRace
 
                 State = RivalState.Rush;
                 audio.PlayOneShot(rushSound);
+            }else if(checkRef.currentPlayerCheckpoint >= rushCheckPoint && checkRef.currentPlayerLap == checkRef.lapsRequiredToWin - 1 && !hasRushed && CHEATS.state == CHEATS.CheatState.Cheat && !playedBuzzer)
+            {//Longest if statement known to man teehee
+                playedBuzzer = true;
+                audio.PlayOneShot(buzzer);
             }
 
         }

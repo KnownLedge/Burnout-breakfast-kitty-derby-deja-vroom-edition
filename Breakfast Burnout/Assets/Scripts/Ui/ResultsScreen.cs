@@ -53,7 +53,14 @@ public class ResultsScreen : MonoBehaviour
                 if (Vector3.Distance(standingsObj.localPosition, startPos) < 9)
                 {
                     FLScript.shouldFill = false;
-                    SceneManager.LoadScene("ErykTestScene");
+                    if (checkRef.raceResults[0] == 5)
+                    {
+                        SceneManager.LoadScene("MainMenu");
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene("ErykTestScene");
+                    }
                     state = 2;
                 }
             }
