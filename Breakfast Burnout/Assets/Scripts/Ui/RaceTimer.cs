@@ -16,22 +16,25 @@ public class RaceTimer : MonoBehaviour
     private float mile; //mileseconds
     private float second;
 
+    public float offSet = 0f;
+    public int direction = 1;
 
     void Start()
     {
-
+        gameTime = offSet;
     }
 
     // Update is called once per frame
     void Update()
     {
         gameTime += Time.deltaTime;
+        
         roundedTime = Mathf.RoundToInt(gameTime);
-        minutes = (roundedTime / 60); //get total minutes spent
-        second = (roundedTime % 60); // get remainder seconds from what isn't a minute
+        minutes = Mathf.Abs((roundedTime / 60)); //get total minutes spent
+        second = Mathf.Abs((roundedTime % 60)); // get remainder seconds from what isn't a minute
         hours = (minutes / 60); // Get hours by divided minutes by 60
-        minutes = (minutes % 60); //Get remainder minutes off of calculation for hours
-        mile = (Mathf.RoundToInt(gameTime * 100) % 60); 
+        minutes = Mathf.Abs((minutes % 60)); //Get remainder minutes off of calculation for hours
+        mile = Mathf.Abs((Mathf.RoundToInt(gameTime * 100) % 60)); 
 
 
         outputTime = MakeString(minutes) + ":" + MakeString(second) + ":" + MakeString(mile);
