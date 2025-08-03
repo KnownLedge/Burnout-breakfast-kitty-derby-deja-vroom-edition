@@ -79,15 +79,9 @@ public class CheckpointSystem : MonoBehaviour
             {
                 if (val == i)
                 {
-                    if (hasFinished) {
-                        raceResults.RemoveAt(i);
-                        //Racer accidentally finished twice.
-                    }
-                    else
-                    {
 
                         hasFinished = true;
-                    }
+                    
                     //Racer is in the results list, no need to add them
                 }
             }
@@ -115,7 +109,22 @@ public class CheckpointSystem : MonoBehaviour
             if (currentNPCRacerLaps[npcRacerNumber] == lapsRequiredToWin)
             {
                 print("NPC racer " + (npcRacerNumber + 1) + " won! >:(");
-                raceResults.Add(npcRacerNumber);
+                    bool hasFinished = false;
+                    foreach (int val in raceResults)
+                    {
+                        if (val == npcRacerNumber)
+                        {
+
+                            hasFinished = true;
+
+                            //Racer is in the results list, no need to add them
+                        }
+                    }
+                    if (!hasFinished)
+                    {
+                        raceResults.Add(npcRacerNumber);
+                    }
+                
             }
         }
     }
