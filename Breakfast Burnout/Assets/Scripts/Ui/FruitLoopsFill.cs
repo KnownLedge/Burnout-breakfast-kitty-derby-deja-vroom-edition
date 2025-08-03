@@ -18,7 +18,7 @@ public class FruitLoopsFill : MonoBehaviour
         image = GetComponent<Image>();
         if (fillOnAwake)
         {
-          shouldFill = true;  
+          shouldFill = !shouldFill;  
         }
     }
 

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class ResultsScreen : MonoBehaviour
 {
@@ -10,9 +12,25 @@ public class ResultsScreen : MonoBehaviour
     public FruitLoopsFill FLScript;
     public Vector3 centerPos;
     private Vector3 startPos;
+
+    public List<string> npcNames;
+    public List<Color> playerColors;
+    public CheckpointSystem checkRef;
+
+    public List<Image> backgroundImages;
+    public List<TMP_Text> racerTitles;
+
     void Start()
     {
      startPos = standingsObj.localPosition;   
+        if(checkRef != null)
+        {
+            for(int i = 0; i < checkRef.raceResults.Count; i++)
+            {
+                backgroundImages[i].color = playerColors[checkRef.raceResults[i]];
+                racerTitles[i].text = npcNames[checkRef.raceResults[i]];
+            }
+        }
     }
 
     // Update is called once per frame
