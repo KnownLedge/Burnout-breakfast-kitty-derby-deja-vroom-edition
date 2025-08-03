@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject creditsPanel;
     public GameObject pauseMenuPanel;
     [SerializeField] private GameObject winScreenPanel;
+    public GameObject gameHUD;
 
     void Start()
     {
@@ -19,7 +20,7 @@ public class UIManager : MonoBehaviour
 
     public void MainMenuStart()
     {
-        SceneManager.LoadScene("DanielTestScene");
+        SceneManager.LoadScene("RACESCENE");
     }
 
     public void MainMenuSettings()
@@ -60,7 +61,8 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1; //Unpause time.
         pauseMenuPanel.SetActive(false);
-    }
+        gameHUD.SetActive(true);
+}
 
     public void PauseMenuSettings()
     {

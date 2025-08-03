@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private UIManager uiManagerReference;
 
+    public GameObject gameHUD;
+
     [Header("Speed")]
     public float acceleration;
     public float topSpeed;
@@ -292,11 +294,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 Time.timeScale = 0; //Pause time.
                 uiManagerReference.pauseMenuPanel.SetActive(true);
-            }
+                gameHUD.SetActive(false);
+}
             else if (uiManagerReference.pauseMenuPanel.activeSelf && Time.timeScale == 0)
             {
                 Time.timeScale = 1; //Unpause time.
                 uiManagerReference.pauseMenuPanel.SetActive(false);
+                gameHUD.SetActive(true);
             }
         }
     }
