@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NPC Racer
   - Background Music
+  - Collectable
   layers:
   - Default
   - TransparentFX
