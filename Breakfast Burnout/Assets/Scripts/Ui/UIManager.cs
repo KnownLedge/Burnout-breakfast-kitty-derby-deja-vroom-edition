@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject regularMainMenuButtons;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject creditsPanel;
-    [SerializeField] private GameObject pauseMenuPanel;
+    public GameObject pauseMenuPanel;
     [SerializeField] private GameObject winScreenPanel;
 
     void Start()
@@ -58,7 +58,8 @@ public class UIManager : MonoBehaviour
 
     public void PauseMenuResume()
     {
-        //Reverse whatever was used to pause
+        Time.timeScale = 1; //Unpause time.
+        pauseMenuPanel.SetActive(false);
     }
 
     public void PauseMenuSettings()
