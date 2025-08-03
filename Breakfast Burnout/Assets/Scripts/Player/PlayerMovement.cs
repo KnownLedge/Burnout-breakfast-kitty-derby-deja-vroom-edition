@@ -149,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
             //Start process of drifting
             hopTimer = 0f;
             //reset timer
+            audio.PlayOneShot(SL.driftHop);
 
             canHop = false;
 
