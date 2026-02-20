@@ -70,7 +70,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("DEBUG")]
     //SPEED
     [SerializeField] private float currentSpeed;
-
+    [SerializeField] internal Vector3 externalBoost; //Boost applied by external sources, useful for things like conveyors or water streams.
+    [SerializeField] private int externalBoostSources; //Amount of objects trying to apply external boost to the player
+    
     //TURNING
     [SerializeField] private float currentRotate;
     [SerializeField] private float rotate = 0;
@@ -372,7 +374,12 @@ public class PlayerMovement : MonoBehaviour
             //Camera FOv
             CI.Camera.fieldOfView = Mathf.Lerp(CI.Camera.fieldOfView, CI.intendFov, Time.deltaTime * CI.fovSpeed);
 
+        //External boost source application
+        plrObjRb.AddForce(externalBoost, ForceMode.VelocityChange);
 
+        externalBoost = Vector3.zero;
+        //Reset the external boost, if the player is still on a boost source, it'll be reapplied next frame, otherwise this will end the boost
+        externalBoostSources = 0;
     }
 
     private void LateUpdate()
@@ -430,11 +437,19 @@ public class PlayerMovement : MonoBehaviour
         {
             GetCollectable();
         }
+        
     }
 
     public void GetCollectable()
     {
         audio.PlayOneShot(SL.collectSound);
     }
+    //Function for applying a boost to the player that will be constant every frame, intended for streams and conveyors
+    public void ApplyExternalBoost(Vector3 boost)
+    {
+        externalBoostSources += 1;
+        externalBoost = (externalBoost + boost) / externalBoostSources;
+    }
+    
 
 }

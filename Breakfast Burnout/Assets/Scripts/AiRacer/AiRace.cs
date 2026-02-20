@@ -21,6 +21,9 @@ public class AiRace : MonoBehaviour
     [SerializeField] private float currentRotate;
     private float rotate = 0;
 
+    public Vector3 externalBoost; //Same as external boost for the player, used for streams/treadmils
+    private int externalBoostSources = 0;
+
     public float extraGravity = 9.8f;
     public Transform wayPointParent;
     public List<Transform> wayPoints;
@@ -109,6 +112,12 @@ public class AiRace : MonoBehaviour
 
         //aiKart.transform.rotation = Vector3.Lerp(aiKart.transform.rotation, targetRotation, Time.deltaTime * 5f);
         //Still no idea about the magic 5f number
+        //External boost source application
+        physObjRb.AddForce(externalBoost, ForceMode.VelocityChange);
+
+        externalBoost = Vector3.zero;
+        //Reset the external boost, if the player is still on a boost source, it'll be reapplied next frame, otherwise this will end the boost
+        externalBoostSources = 0;
     }
 
     private void LateUpdate()
@@ -126,5 +135,12 @@ public class AiRace : MonoBehaviour
         physObjRb.angularVelocity = Vector3.zero;
         //Reset spin
     }
+
+    public void ApplyExternalBoost(Vector3 boost)
+    {
+        externalBoostSources += 1;
+        externalBoost = (externalBoost + boost) / externalBoostSources;
+    }
+
 
 }

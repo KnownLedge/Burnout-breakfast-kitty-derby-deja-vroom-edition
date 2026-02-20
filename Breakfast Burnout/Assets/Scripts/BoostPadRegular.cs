@@ -8,8 +8,8 @@ public class BoostPadRegular : MonoBehaviour
 
     [SerializeField] private Vector3 boostForce = new Vector3(0,0,1);
     //Direction and magnitude of the boost (only magnitude if Local or Player direction is used)
-    public enum BDirection {Set, LocalToObject, PlayerDirection}
-    [Tooltip("What direction to use for the boost, Set: set by value Local: set by object direction, Player: set by players current direction")]
+    public enum BDirection {Set, LocalToObject, PlayerDirection, CamDirection}
+    [Tooltip("What direction to use for the boost, Set: set by value Local: set by object direction, Player: set by players current direction Cam: set by player facing direction")]
     public BDirection BoostDirection = BDirection.Set;
 
     private void OnTriggerEnter(Collider other)
@@ -37,9 +37,14 @@ public class BoostPadRegular : MonoBehaviour
         else if (BoostDirection == BDirection.LocalToObject) { 
         rb.AddForce(transform.forward * boostForce.magnitude, ForceMode.Impulse);
         }
-        else
+        else if(BoostDirection == BDirection.PlayerDirection)
         {
             rb.AddForce(rb.velocity.normalized * boostForce.magnitude, ForceMode.Impulse);
+        }
+        else
+        {
+            PlayerMovement playMove = rb.gameObject.GetComponentInParent<PlayerMovement>();
+            rb.AddForce(playMove.turnPointer.transform.forward * boostForce.magnitude, ForceMode.Impulse);
         }
     }
     private void OnDrawGizmosSelected()
