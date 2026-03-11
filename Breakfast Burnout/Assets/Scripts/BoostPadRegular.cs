@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoostPadRegular : MonoBehaviour
 {
-    private Color toolTipColor = new Color(0.5f, 0.5f, 1f, 0.75f); //Feel free to change this colour to whatever you want
+    private Color toolTipColor = new Color(0.5f, 0.5f, 1f, 255); //Feel free to change this colour to whatever you want
 
     [SerializeField] private Vector3 boostForce = new Vector3(0,0,1);
     //Direction and magnitude of the boost (only magnitude if Local or Player direction is used)
