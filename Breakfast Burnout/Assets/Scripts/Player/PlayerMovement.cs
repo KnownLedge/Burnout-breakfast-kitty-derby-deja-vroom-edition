@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Unity.Netcode;
 //Reference video
 //https://www.youtube.com/watch?v=Ki-tWT50cEQ&list=PL1R2qsKCcUCKY1p7URUct96O0dorgQnO6
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
+
+    [Header("NetCode")]
+    public bool PLAYING_ONLINE = false;
+
     [Header("References")]
     public GameObject plrObj;// Reference to object for gameplay physics and collision
     public GameObject plrKart; //Reference to Kart model holder
@@ -105,281 +110,291 @@ public class PlayerMovement : MonoBehaviour
         plrObjRb = plrObj.GetComponent<Rigidbody>();
         initScale = kartModel.transform.localScale;
         intendScale = initScale;
+        if(PLAYING_ONLINE && !IsOwner)
+        {
+            CI.Camera.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        //ACCELERATION
-        if (Input.GetButton("Vertical") && Time.timeScale == 1)
-        {
-            currentSpeed = acceleration * Input.GetAxisRaw("Vertical");
-        }
-        else
-        {
-            currentSpeed = 0;
-        }
-
-
-        //STEERING
-        if (Input.GetAxisRaw("Horizontal") != 0 && state != DriftStates.StartDrift && Time.timeScale == 1)
-        {
-            int dir = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
-            //Get input as either -1 to 1
-            float amount = Mathf.Abs(Input.GetAxis("Horizontal"));
-            Steer(dir, amount);
-
-
-        }
-
-        //Visual
-        VI.steerFRotate = Mathf.Lerp(VI.steerFRotate, VI.frontTurnRange * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
-        VI.frontSect.rotation = new Quaternion();
-        VI.frontSect.Rotate(0, VI.steerFRotate, 0);
-        VI.steerBRotate = Mathf.Lerp(VI.steerBRotate, VI.backTurnRange * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
-        VI.rearSect.rotation = new Quaternion();
-        VI.rearSect.Rotate(0, VI.steerBRotate, 0);
-        VI.tiltRotate = Mathf.Lerp(VI.tiltRotate, VI.catTilt * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
-        VI.cat.rotation = new Quaternion();
-        VI.cat.Rotate(0, 0, VI.tiltRotate);
-
-
-        //DRIFTING
-        if (Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop && Time.timeScale == 1)
-        {
-            state = DriftStates.StartDrift;
-            //Start process of drifting
-            hopTimer = 0f;
-            //reset timer
-            audio.PlayOneShot(SL.driftHop);
-
-            canHop = false;
-
-            plrObjRb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
-            //Drift hop
-
-            //VISUAL
-            kartModel.transform.localScale = hopStretch;
-            intendScale = driftSquash;
-
-        }else if (Input.GetButtonUp("Jump"))
-        {
-
-            audio.Stop();
-            if (state == DriftStates.Drifting)
+        if(!PLAYING_ONLINE || IsOwner) 
+        { 
+            //ACCELERATION
+            if (Input.GetButton("Vertical") && Time.timeScale == 1)
             {
-                audio.PlayOneShot(SL.driftEnd);
+                currentSpeed = acceleration * Input.GetAxisRaw("Vertical");
+            }
+            else
+            {
+                currentSpeed = 0;
             }
 
-            state = DriftStates.Steering;
-            hopTimer = 0f;
-            //Reset timer
 
-            turnPointer.transform.forward = plrKart.transform.forward;
-            kartModel.transform.forward = plrKart.transform.forward;
+            //STEERING
+            if (Input.GetAxisRaw("Horizontal") != 0 && state != DriftStates.StartDrift && Time.timeScale == 1)
+            {
+                int dir = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                //Get input as either -1 to 1
+                float amount = Mathf.Abs(Input.GetAxis("Horizontal"));
+                Steer(dir, amount);
 
 
-
-            DriftBoost();
-            //Activate DriftBoost
+            }
 
             //Visual
-            intendScale = initScale;
+            VI.steerFRotate = Mathf.Lerp(VI.steerFRotate, VI.frontTurnRange * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
+            VI.frontSect.rotation = new Quaternion();
+            VI.frontSect.Rotate(0, VI.steerFRotate, 0);
+            VI.steerBRotate = Mathf.Lerp(VI.steerBRotate, VI.backTurnRange * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
+            VI.rearSect.rotation = new Quaternion();
+            VI.rearSect.Rotate(0, VI.steerBRotate, 0);
+            VI.tiltRotate = Mathf.Lerp(VI.tiltRotate, VI.catTilt * Input.GetAxisRaw("Horizontal"), Time.deltaTime * 8f);
+            VI.cat.rotation = new Quaternion();
+            VI.cat.Rotate(0, 0, VI.tiltRotate);
 
 
-
-        }
-
-        RaycastHit groundHit;
-
-        if(Physics.Raycast(plrKart.transform.position, Vector3.down, out groundHit, groundDist))
-        {
-            canHop = true;
-            if (state == DriftStates.StartDrift && hopTimer > hopTime)
+            //DRIFTING
+            if (Input.GetButtonDown("Jump") && state == DriftStates.Steering && canHop && Time.timeScale == 1)
             {
-                if (Input.GetAxisRaw("Horizontal") != 0)
-                {// If moving left/right, starting a drift and the timer for starting a drift is up
-                    state = DriftStates.Drifting;
-                    Debug.Log("DRifting now!");
-                    //Then start a drift
-                    driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
-                    //Get drift direction to hold throughout drift
+                state = DriftStates.StartDrift;
+                //Start process of drifting
+                hopTimer = 0f;
+                //reset timer
+                audio.PlayOneShot(SL.driftHop);
 
-                    turnPointer.transform.forward = plrKart.transform.forward;
-                    turnPointer.transform.Rotate(new Vector3(0,driftPivot * driftDirection,0));
+                canHop = false;
 
-                    //Visual
-                    driftRotate = 0f;
-                    audio.PlayOneShot(SL.driftStart);
-                    audio.Play();
+                plrObjRb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
+                //Drift hop
 
+                //VISUAL
+                kartModel.transform.localScale = hopStretch;
+                intendScale = driftSquash;
 
-                }
-                else//Direction was not held when drift should start, cancel drift
+            }
+            else if (Input.GetButtonUp("Jump"))
+            {
+
+                audio.Stop();
+                if (state == DriftStates.Drifting)
                 {
-                    state = DriftStates.Steering;
-                    hopTimer = 0f;
+                    audio.PlayOneShot(SL.driftEnd);
                 }
 
+                state = DriftStates.Steering;
+                hopTimer = 0f;
+                //Reset timer
+
+                turnPointer.transform.forward = plrKart.transform.forward;
+                kartModel.transform.forward = plrKart.transform.forward;
+
+
+
+                DriftBoost();
+                //Activate DriftBoost
+
+                //Visual
+                intendScale = initScale;
+
             }
+
+        
+
+            RaycastHit groundHit;
+
+            if(Physics.Raycast(plrKart.transform.position, Vector3.down, out groundHit, groundDist))
+            {
+                canHop = true;
+                if (state == DriftStates.StartDrift && hopTimer > hopTime)
+                {
+                    if (Input.GetAxisRaw("Horizontal") != 0)
+                    {// If moving left/right, starting a drift and the timer for starting a drift is up
+                        state = DriftStates.Drifting;
+                        Debug.Log("DRifting now!");
+                        //Then start a drift
+                        driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                        //Get drift direction to hold throughout drift
+
+                        turnPointer.transform.forward = plrKart.transform.forward;
+                        turnPointer.transform.Rotate(new Vector3(0,driftPivot * driftDirection,0));
+
+                        //Visual
+                        driftRotate = 0f;
+                        audio.PlayOneShot(SL.driftStart);
+                        audio.Play();
+
+
+                    }
+                    else//Direction was not held when drift should start, cancel drift
+                    {
+                        state = DriftStates.Steering;
+                        hopTimer = 0f;
+                    }
+
+                }
             
-        }
-
-        if(state == DriftStates.Drifting)
-        {
-            float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
-            //If drifting into direction, will be 1.5, if drifting away, will be 0.5
-            Steer(driftDirection, control * driftPower);
-            driftCharge += control * Time.deltaTime;
-            //steer with drift change
-        }
-
-        currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f);
-        //No idea what the magic number is for
-        rotate = 0;
-
-        RaycastHit hitOn;
-        RaycastHit hitNear;
-
-        Physics.Raycast(plrKart.transform.position, Vector3.down, out hitOn, 1.1f);
-        Physics.Raycast(plrKart.transform.position, Vector3.down, out hitNear, 2.0f);
-
-
-        kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
-        kartModel.transform.Rotate(0, plrKart.transform.eulerAngles.y, 0);
-        if(state == DriftStates.Drifting)
-        {
-            driftRotate = Mathf.Lerp(driftRotate, visualTurn + (visualIncrement * Input.GetAxisRaw("Horizontal") * driftDirection), Time.deltaTime * 8f);
-            //Lerp the rotation for drifing, adding on extra turn depdning on the direction player is holding relative to the drift
-            kartModel.transform.Rotate(new Vector3(0, driftRotate * -driftDirection, 0));
-            Vector3 camTargetPos = CI.Camera.transform.localPosition;
-            camTargetPos.x = 0;
-            camTargetPos.x += CI.pivotDist * driftDirection;
-            CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
-
-        }
-        else
-        {
-            Vector3 camTargetPos = CI.Camera.transform.localPosition;
-            camTargetPos.x = 0;
-            CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
-        }
-
-
-        if (driftCharge > driftRequirements[2])
-        {
-            boostSignals[2].SetActive(true);
-            boostSignals[0].SetActive(false);
-            boostSignals[1].SetActive(false);
-        }
-        else if (driftCharge > driftRequirements[1])
-        {
-            boostSignals[1].SetActive(true);
-            boostSignals[0].SetActive(false);
-            boostSignals[2].SetActive(false);
-        }
-        else if (driftCharge > driftRequirements[0])
-        {
-            boostSignals[0].SetActive(true);
-            boostSignals[1].SetActive(false);
-            boostSignals[2].SetActive(false);
-        }
-        else
-        {
-            boostSignals[0].SetActive(false);
-            boostSignals[1].SetActive(false);
-            boostSignals[2].SetActive(false);
-        }
-
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            if (!uiManagerReference.pauseMenuPanel.activeSelf && Time.timeScale == 1)
-            {
-                Time.timeScale = 0; //Pause time.
-                uiManagerReference.pauseMenuPanel.SetActive(true);
-                gameHUD.SetActive(false);
-}
-            else if (uiManagerReference.pauseMenuPanel.activeSelf && Time.timeScale == 0)
-            {
-                Time.timeScale = 1; //Unpause time.
-                uiManagerReference.pauseMenuPanel.SetActive(false);
-                gameHUD.SetActive(true);
             }
-        }
+
+            if(state == DriftStates.Drifting)
+            {
+                float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
+                //If drifting into direction, will be 1.5, if drifting away, will be 0.5
+                Steer(driftDirection, control * driftPower);
+                driftCharge += control * Time.deltaTime;
+                //steer with drift change
+            }
+
+            currentRotate = Mathf.Lerp(currentRotate, rotate, Time.deltaTime * 4f);
+            //No idea what the magic number is for
+            rotate = 0;
+
+            RaycastHit hitOn;
+            RaycastHit hitNear;
+
+            Physics.Raycast(plrKart.transform.position, Vector3.down, out hitOn, 1.1f);
+            Physics.Raycast(plrKart.transform.position, Vector3.down, out hitNear, 2.0f);
+
+
+            kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
+            kartModel.transform.Rotate(0, plrKart.transform.eulerAngles.y, 0);
+            if(state == DriftStates.Drifting)
+            {
+                driftRotate = Mathf.Lerp(driftRotate, visualTurn + (visualIncrement * Input.GetAxisRaw("Horizontal") * driftDirection), Time.deltaTime * 8f);
+                //Lerp the rotation for drifing, adding on extra turn depdning on the direction player is holding relative to the drift
+                kartModel.transform.Rotate(new Vector3(0, driftRotate * -driftDirection, 0));
+                Vector3 camTargetPos = CI.Camera.transform.localPosition;
+                camTargetPos.x = 0;
+                camTargetPos.x += CI.pivotDist * driftDirection;
+                CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
+
+            }
+            else
+            {
+                Vector3 camTargetPos = CI.Camera.transform.localPosition;
+                camTargetPos.x = 0;
+                CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
+            }
+
+
+            if (driftCharge > driftRequirements[2])
+            {
+                boostSignals[2].SetActive(true);
+                boostSignals[0].SetActive(false);
+                boostSignals[1].SetActive(false);
+            }
+            else if (driftCharge > driftRequirements[1])
+            {
+                boostSignals[1].SetActive(true);
+                boostSignals[0].SetActive(false);
+                boostSignals[2].SetActive(false);
+            }
+            else if (driftCharge > driftRequirements[0])
+            {
+                boostSignals[0].SetActive(true);
+                boostSignals[1].SetActive(false);
+                boostSignals[2].SetActive(false);
+            }
+            else
+            {
+                boostSignals[0].SetActive(false);
+                boostSignals[1].SetActive(false);
+                boostSignals[2].SetActive(false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                if (!uiManagerReference.pauseMenuPanel.activeSelf && Time.timeScale == 1)
+                {
+                    Time.timeScale = 0; //Pause time.
+                    uiManagerReference.pauseMenuPanel.SetActive(true);
+                    gameHUD.SetActive(false);
+                }
+                else if (uiManagerReference.pauseMenuPanel.activeSelf && Time.timeScale == 0)
+                {
+                    Time.timeScale = 1; //Unpause time.
+                    uiManagerReference.pauseMenuPanel.SetActive(false);
+                    gameHUD.SetActive(true);
+                }
+        }   }
     }
     private void FixedUpdate()
     {
-        if (boostPower > 0)
+        if(!PLAYING_ONLINE || IsOwner)
         {
-            plrObjRb.AddForce(turnPointer.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
-
-        }
-        else
-        {
-            plrObjRb.AddForce(turnPointer.transform.forward * currentSpeed, ForceMode.Acceleration);
-        }
-
-        //Turnpointer faces the same way as player kart, but will be turned when drifting to make turning go at an odd angle
-
-        Vector3 hVelocity = plrObjRb.linearVelocity;
-        hVelocity.y = 0;
-        hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
-
-        //Visual: Making wheel speed match horizontal velocity
-        VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
-        VI.rearWheels.Rotate(0, hVelocity.magnitude * VI.backWheelSPeed, 0);
-
-
-
-        hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
-
-        plrObjRb.linearVelocity = new Vector3(hVelocity.x, plrObjRb.linearVelocity.y, hVelocity.z);
-
-
-        Quaternion targetRotation = new Quaternion();
-        targetRotation = Quaternion.Euler(new Vector3(0, plrKart.transform.eulerAngles.y + currentRotate, 0));
-
-        plrKart.transform.rotation = Quaternion.Lerp(plrKart.transform.rotation, targetRotation, Time.deltaTime * 5f);
-        //Still no idea about the magic 5f number
-
-
-        if(state == DriftStates.StartDrift || state == DriftStates.Drifting)
-        {
-            hopTimer += Time.deltaTime;
-
-            if(hopTimer > hopTime)
+            if (boostPower > 0)
             {
-                plrObjRb.AddForce(Vector3.down * driftGrav, ForceMode.Acceleration);
-                //Apply extra force to keep player to floor while drifting
+                plrObjRb.AddForce(turnPointer.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
+
             }
-        }
+            else
+            {
+                plrObjRb.AddForce(turnPointer.transform.forward * currentSpeed, ForceMode.Acceleration);
+            }
 
-        boostPower -= Time.deltaTime;
+            //Turnpointer faces the same way as player kart, but will be turned when drifting to make turning go at an odd angle
 
-        //Gravity
-        plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+            Vector3 hVelocity = plrObjRb.linearVelocity;
+            hVelocity.y = 0;
+            hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
-        //Visual squash and stretch
-        kartModel.transform.localScale = Vector3.Lerp(kartModel.transform.localScale, intendScale, Time.deltaTime * rescaleSpeed);
+            //Visual: Making wheel speed match horizontal velocity
+            VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
+            VI.rearWheels.Rotate(0, hVelocity.magnitude * VI.backWheelSPeed, 0);
 
-        if(boostPower < 0)
-        {
-            CI.intendFov = CI.defaultFov;
-        }
-        else
-        {
-            CI.intendFov = CI.boostFov;
-        }
+
+
+            hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
+
+            plrObjRb.linearVelocity = new Vector3(hVelocity.x, plrObjRb.linearVelocity.y, hVelocity.z);
+
+
+            Quaternion targetRotation = new Quaternion();
+            targetRotation = Quaternion.Euler(new Vector3(0, plrKart.transform.eulerAngles.y + currentRotate, 0));
+
+            plrKart.transform.rotation = Quaternion.Lerp(plrKart.transform.rotation, targetRotation, Time.deltaTime * 5f);
+            //Still no idea about the magic 5f number
+
+
+            if (state == DriftStates.StartDrift || state == DriftStates.Drifting)
+            {
+                hopTimer += Time.deltaTime;
+
+                if (hopTimer > hopTime)
+                {
+                    plrObjRb.AddForce(Vector3.down * driftGrav, ForceMode.Acceleration);
+                    //Apply extra force to keep player to floor while drifting
+                }
+            }
+
+            boostPower -= Time.deltaTime;
+
+            //Gravity
+            plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+
+            //Visual squash and stretch
+            kartModel.transform.localScale = Vector3.Lerp(kartModel.transform.localScale, intendScale, Time.deltaTime * rescaleSpeed);
+
+            if (boostPower < 0)
+            {
+                CI.intendFov = CI.defaultFov;
+            }
+            else
+            {
+                CI.intendFov = CI.boostFov;
+            }
 
             //Camera FOv
             CI.Camera.fieldOfView = Mathf.Lerp(CI.Camera.fieldOfView, CI.intendFov, Time.deltaTime * CI.fovSpeed);
 
-        //External boost source application
-        plrObjRb.AddForce(externalBoost, ForceMode.VelocityChange);
+            //External boost source application
+            plrObjRb.AddForce(externalBoost, ForceMode.VelocityChange);
 
-        externalBoost = Vector3.zero;
-        //Reset the external boost, if the player is still on a boost source, it'll be reapplied next frame, otherwise this will end the boost
-        externalBoostSources = 0;
+            externalBoost = Vector3.zero;
+            //Reset the external boost, if the player is still on a boost source, it'll be reapplied next frame, otherwise this will end the boost
+            externalBoostSources = 0;
+        }
     }
 
     private void LateUpdate()
