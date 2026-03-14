@@ -193,13 +193,13 @@ public class OldPlayerMovement : MonoBehaviour
         }
 
 
-        Vector3 hVelocity = plrObjRb.velocity;
+        Vector3 hVelocity = plrObjRb.linearVelocity;
         hVelocity.y = 0;
         hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
         hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
 
-        plrObjRb.velocity = new Vector3(hVelocity.x, plrObjRb.velocity.y, hVelocity.z);
+        plrObjRb.linearVelocity = new Vector3(hVelocity.x, plrObjRb.linearVelocity.y, hVelocity.z);
 
         Quaternion targetRotation = new Quaternion();
         targetRotation = Quaternion.Euler(new Vector3(0, plrKart.transform.eulerAngles.y + currentRotate, 0));
@@ -238,7 +238,7 @@ public class OldPlayerMovement : MonoBehaviour
         currentSpeed = 0;
         boostPower = 0;
         driftCharge = 0;
-        plrObjRb.velocity = Vector3.zero;
+        plrObjRb.linearVelocity = Vector3.zero;
         plrObjRb.angularVelocity = Vector3.zero;
         //Reset spin
     }

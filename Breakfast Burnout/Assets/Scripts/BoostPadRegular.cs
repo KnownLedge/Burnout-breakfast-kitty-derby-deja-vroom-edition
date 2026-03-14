@@ -39,7 +39,7 @@ public class BoostPadRegular : MonoBehaviour
         }
         else if(BoostDirection == BDirection.PlayerDirection)
         {
-            rb.AddForce(rb.velocity.normalized * boostForce.magnitude, ForceMode.Impulse);
+            rb.AddForce(rb.linearVelocity.normalized * boostForce.magnitude, ForceMode.Impulse);
         }
         else
         {

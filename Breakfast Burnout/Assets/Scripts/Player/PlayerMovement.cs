@@ -321,7 +321,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Turnpointer faces the same way as player kart, but will be turned when drifting to make turning go at an odd angle
 
-        Vector3 hVelocity = plrObjRb.velocity;
+        Vector3 hVelocity = plrObjRb.linearVelocity;
         hVelocity.y = 0;
         hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
@@ -333,7 +333,7 @@ public class PlayerMovement : MonoBehaviour
 
         hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
 
-        plrObjRb.velocity = new Vector3(hVelocity.x, plrObjRb.velocity.y, hVelocity.z);
+        plrObjRb.linearVelocity = new Vector3(hVelocity.x, plrObjRb.linearVelocity.y, hVelocity.z);
 
 
         Quaternion targetRotation = new Quaternion();
@@ -426,7 +426,7 @@ public class PlayerMovement : MonoBehaviour
         currentSpeed = 0;
         boostPower = 0;
         driftCharge = 0;
-        plrObjRb.velocity = Vector3.zero;
+        plrObjRb.linearVelocity = Vector3.zero;
         plrObjRb.angularVelocity = Vector3.zero;
         //Reset spin
     }

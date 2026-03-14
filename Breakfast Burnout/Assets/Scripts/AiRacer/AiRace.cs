@@ -86,13 +86,13 @@ public class AiRace : MonoBehaviour
         
 
 
-        Vector3 hVelocity = physObjRb.velocity;
+        Vector3 hVelocity = physObjRb.linearVelocity;
         hVelocity.y = 0;
         hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
         hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
 
-        physObjRb.velocity = new Vector3(hVelocity.x, physObjRb.velocity.y, hVelocity.z);
+        physObjRb.linearVelocity = new Vector3(hVelocity.x, physObjRb.linearVelocity.y, hVelocity.z);
 
         Vector3 targetRotation = (transform.position + currentTarget.position).normalized;
         Vector3 storedEuler = aiKart.transform.eulerAngles;
@@ -131,7 +131,7 @@ public class AiRace : MonoBehaviour
         Debug.Log("stats resetting");
         currentSpeed = 0;
 
-        physObjRb.velocity = Vector3.zero;
+        physObjRb.linearVelocity = Vector3.zero;
         physObjRb.angularVelocity = Vector3.zero;
         //Reset spin
     }
