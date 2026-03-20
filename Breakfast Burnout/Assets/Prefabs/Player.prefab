@@ -733,14 +733,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831933099923609925}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.299506, y: -0, z: -0.000000014901159, w: 0.9540944}
-  m_LocalPosition: {x: 0, y: 4.1916275, z: -6.2481823}
-  m_LocalScale: {x: 5.201295, y: 0.46686625, z: 5.414245}
+  m_LocalRotation: {x: 0.299506, y: -0, z: -0.000000029802319, w: 0.9540944}
+  m_LocalPosition: {x: 0, y: -0.1599896, z: -1.6600041}
+  m_LocalScale: {x: 1.3897952, y: 0.12474751, z: 1.4466958}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1454682852272168299}
   - {fileID: 3201819527514033831}
-  m_Father: {fileID: 8469426629295777660}
+  m_Father: {fileID: 6161576610402618040}
   m_LocalEulerAnglesHint: {x: 34.856, y: 0, z: 0}
 --- !u!33 &4532912300931282193
 MeshFilter:
@@ -843,14 +843,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2000608674614448259}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.299506, y: -0, z: -0.000000014901159, w: 0.9540944}
-  m_LocalPosition: {x: 0, y: 4.1916275, z: -6.2481823}
-  m_LocalScale: {x: 5.201295, y: 0.46686625, z: 5.414245}
+  m_LocalRotation: {x: 0.299506, y: -0, z: -0.000000029802319, w: 0.9540944}
+  m_LocalPosition: {x: 0, y: -0.1599896, z: -1.6600041}
+  m_LocalScale: {x: 1.3897952, y: 0.12474751, z: 1.4466958}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1892906170151316803}
   - {fileID: 3975460038194018066}
-  m_Father: {fileID: 8469426629295777660}
+  m_Father: {fileID: 6161576610402618040}
   m_LocalEulerAnglesHint: {x: 34.856, y: 0, z: 0}
 --- !u!33 &3599002535954204297
 MeshFilter:
@@ -1025,6 +1025,7 @@ GameObject:
   - component: {fileID: 1783969829843518513}
   - component: {fileID: 6552479117464606865}
   - component: {fileID: 1715161242456284955}
+  - component: {fileID: 936261008267303258}
   m_Layer: 0
   m_Name: KartModel
   m_TagString: Untagged
@@ -1047,6 +1048,9 @@ Transform:
   m_Children:
   - {fileID: 1662531170684915487}
   - {fileID: 4928632361055983045}
+  - {fileID: 985883085582042142}
+  - {fileID: 3264732712077960703}
+  - {fileID: 5047872764196960677}
   m_Father: {fileID: 7149768262502862590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3592413012080651699
@@ -1148,6 +1152,41 @@ MonoBehaviour:
   steerFRotate: 0
   steerBRotate: 0
   tiltRotate: 0
+--- !u!114 &936261008267303258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2558522085608657152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 300ec8c4b96769d40b0a49b14dc85a35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kartid: 6
+  catid: 7
+  playerRef: {fileID: 1055746492343184874}
+  karts:
+  - {fileID: 4485940444499732548, guid: 17ba20da775d63f48a35b1bd79fa643e, type: 3}
+  - {fileID: 6361367547084045406, guid: f0056554c49e75c4c806e7af7a466dd4, type: 3}
+  - {fileID: 7689536920294733345, guid: 439b9f5cfa26c4441a6986195d79119f, type: 3}
+  - {fileID: 3368321708444270616, guid: cfd332cdb23ef174a98af04673741146, type: 3}
+  - {fileID: 3431624546573838692, guid: 09d49ce54bb423a4aa7afb4fa04b970f, type: 3}
+  - {fileID: 4406785495147676238, guid: 1fb9d3ac23310b34c97a6b9536b3d9ae, type: 3}
+  - {fileID: 6623682766978809342, guid: 2ccc8afd0c86a9e4d8ddc1c2c7f8cadf, type: 3}
+  cats:
+  - {fileID: 8992467447047613384, guid: ff2ba05b0f5e6c34daf5a9966e15bbc8, type: 3}
+  - {fileID: 8992467447047613384, guid: 21b394c532ae511499d5e71d85ffb0eb, type: 3}
+  - {fileID: 8992467447047613384, guid: c8d791d30b31a184983d30cfd9ef9380, type: 3}
+  - {fileID: 8992467447047613384, guid: 6b6b98ad7d214334084cb29991db291d, type: 3}
+  - {fileID: 8992467447047613384, guid: 89117a535380ebd48a88297070780016, type: 3}
+  - {fileID: 8992467447047613384, guid: ba4657929e8730641af9cfa32228edc6, type: 3}
+  - {fileID: 8992467447047613384, guid: 578405d5af311bc46b8f8b7ddafb0470, type: 3}
+  - {fileID: 8992467447047613384, guid: 06cc54232dd35fd46b1d182af1a005d8, type: 3}
+  - {fileID: 8992467447047613384, guid: 3dc474ab7682c794c9d29bec266ac325, type: 3}
+  currentKart: {fileID: 5705451222351007615}
+  currentCat: {fileID: 2042857308534347173}
 --- !u!1 &3078962959445217222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,7 +1590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  PLAYING_ONLINE: 1
+  PLAYING_ONLINE: 0
   plrObj: {fileID: 118092939427355276}
   plrKart: {fileID: 8127721057741285870}
   kartModel: {fileID: 2558522085608657152}
@@ -1801,14 +1840,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5583109423924497520}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.299506, y: -0, z: -0.000000014901159, w: 0.9540944}
-  m_LocalPosition: {x: -0, y: 4.1916275, z: -6.95}
-  m_LocalScale: {x: 5.201295, y: 0.46686625, z: 5.414245}
+  m_LocalRotation: {x: 0.299506, y: -0, z: -0.000000029802319, w: 0.9540944}
+  m_LocalPosition: {x: 0, y: -0.1599896, z: -1.8475311}
+  m_LocalScale: {x: 1.3897952, y: 0.12474751, z: 1.4466958}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1895763996905233018}
   - {fileID: 5437870369167237087}
-  m_Father: {fileID: 8469426629295777660}
+  m_Father: {fileID: 6161576610402618040}
   m_LocalEulerAnglesHint: {x: 34.856, y: 0, z: 0}
 --- !u!33 &8557754753738229375
 MeshFilter:
@@ -2449,9 +2488,6 @@ Transform:
   m_Children:
   - {fileID: 4578056508553838305}
   - {fileID: 4851800262826681741}
-  - {fileID: 985883085582042142}
-  - {fileID: 3264732712077960703}
-  - {fileID: 5047872764196960677}
   m_Father: {fileID: 4928632361055983045}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7316687937556594597
@@ -2920,6 +2956,12 @@ PrefabInstance:
 --- !u!4 &1662531170684915487 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b5aed44636ea30d468f88af300063245,
+    type: 3}
+  m_PrefabInstance: {fileID: 1195923644586207476}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2042857308534347173 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b5aed44636ea30d468f88af300063245,
     type: 3}
   m_PrefabInstance: {fileID: 1195923644586207476}
   m_PrefabAsset: {fileID: 0}

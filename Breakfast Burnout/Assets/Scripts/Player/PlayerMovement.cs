@@ -340,7 +340,7 @@ public class PlayerMovement : NetworkBehaviour
             hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
             //Visual: Making wheel speed match horizontal velocity
-            VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
+           // VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
             VI.rearWheels.Rotate(0, hVelocity.magnitude * VI.backWheelSPeed, 0);
 
 
