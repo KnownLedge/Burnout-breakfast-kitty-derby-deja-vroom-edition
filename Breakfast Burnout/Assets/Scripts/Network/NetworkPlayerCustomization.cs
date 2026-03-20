@@ -25,6 +25,7 @@ public class NetworkPlayerCustomization : MonoBehaviour
     public List<Sprite> IconSprites;
     public List<Color> IconColors;
 
+    public PlayerPreviewModel previewModel;
 
     public void UpdateName()
     {
@@ -39,12 +40,20 @@ public class NetworkPlayerCustomization : MonoBehaviour
     {
         PlayerIconId = id;
         playerIconImage.sprite = IconSprites[PlayerIconId];
+        if(previewModel != null)
+        {
+            previewModel.ChangeCharacterModel(id);
+        }
     }
 
     public void UpdateColor(int id)
     {
         playerIconColorId = id;
         playerIconBackground.color = IconColors[id];
+        if (previewModel != null)
+        {
+            previewModel.ChangeKartModel(id);
+        }
     }
 
     public void CompleteCustomization()

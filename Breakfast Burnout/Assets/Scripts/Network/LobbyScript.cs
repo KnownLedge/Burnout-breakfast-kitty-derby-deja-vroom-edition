@@ -44,6 +44,9 @@ public class LobbyScript : MonoBehaviour
     [SerializeField] private List<Image> joinedLobbyPlayerIcons;
     [SerializeField] private NetworkPlayerCustomization customizationInfo;
 
+    [SerializeField] private int maxLobbyPlayerId = 5;
+    [SerializeField] private string defaultGameScene = "RyanTestScene";
+
     public RelayScript relayScript;
 
     public static string gamePlayerName = "Player";
@@ -116,7 +119,7 @@ public class LobbyScript : MonoBehaviour
                     gameIconID = IconID;
                     gameColorID = ColorID;
                     expectedPlayers = lobby.Players.Count;
-                    SceneManager.LoadScene("GameScene");
+                    SceneManager.LoadScene(defaultGameScene);
                     if (hostLobby == null)
                     {
                         relayScript.JoinRelay(joinLobby.Data[KEY_START_GAME].Value);
@@ -160,7 +163,7 @@ public class LobbyScript : MonoBehaviour
         try
         {
             string lobbyName = playerName + "'s Lobby";
-            int maxPlayers = 4;
+            int maxPlayers = 6;
 
             CreateLobbyOptions createOptions = new CreateLobbyOptions
             {
@@ -260,7 +263,7 @@ public class LobbyScript : MonoBehaviour
             joinedLobbyPlayerIcons[i].sprite = customizationInfo.IconSprites[int.Parse(lobby.Players[i].Data["PlayerIcon"].Value)];
             joinedLobbyPlayerIcons[i].color = new Color(1, 1, 1, 1);
         }
-        for (int i = 3; i >= lobby.Players.Count; i--)
+        for (int i = maxLobbyPlayerId; i >= lobby.Players.Count; i--)
         {
             joinedLobbyPlayerNames[i].text = ""; //Hide playername, as no player is in this slot
             joinedLobbyPlayerBackground[i].color = new Color(0, 0, 0, 0);
@@ -440,7 +443,7 @@ public class LobbyScript : MonoBehaviour
                 gameColorID = ColorID;
                 expectedPlayers = hostLobby.Players.Count;
 
-                SceneManager.LoadScene("GameScene");
+                SceneManager.LoadScene(defaultGameScene);
 
                 string relayCode = await relayScript.CreateRelay();
 
