@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Collections;
 using UnityEngine.UIElements;
 using Unity.Netcode;
 //Reference video
@@ -10,7 +11,15 @@ public class PlayerMovement : NetworkBehaviour
 {
 
     [Header("NetCode")]
-    public bool PLAYING_ONLINE = false;
+    private bool PLAYING_ONLINE = false;
+
+    public NetworkVariable<int> playerID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> playerKart = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> playerCharacter = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    private bool isNetReady = false;
+    private bool isNetSpawned = false;
+
 
     [Header("References")]
     public GameObject plrObj;// Reference to object for gameplay physics and collision
@@ -36,7 +45,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("Turning")]
     public float turnRate;
- 
+
     public enum DriftStates { Steering, StartDrift, Drifting };
     [Header("States")]
     public DriftStates state = DriftStates.Steering;
@@ -66,6 +75,7 @@ public class PlayerMovement : NetworkBehaviour
     public Vector3 hopStretch = new Vector3(1, 1.5f, 1);
     public Vector3 driftSquash = new Vector3(1, 0.8f, 1);
 
+    public ApplyPlayerSkin skinRef;
 
 
     [Header("MISC")]
@@ -77,7 +87,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float currentSpeed;
     [SerializeField] internal Vector3 externalBoost; //Boost applied by external sources, useful for things like conveyors or water streams.
     [SerializeField] private int externalBoostSources; //Amount of objects trying to apply external boost to the player
-    
+
     //TURNING
     [SerializeField] private float currentRotate;
     [SerializeField] private float rotate = 0;
@@ -101,6 +111,7 @@ public class PlayerMovement : NetworkBehaviour
 
     void Start()
     {
+        PLAYING_ONLINE = NetworkInfo.PLAYING_ONLINE;
         if (plrObj == null)
         {
             plrObj = transform.Find("PlayerObj").gameObject;
@@ -110,17 +121,36 @@ public class PlayerMovement : NetworkBehaviour
         plrObjRb = plrObj.GetComponent<Rigidbody>();
         initScale = kartModel.transform.localScale;
         intendScale = initScale;
-        if(PLAYING_ONLINE && !IsOwner)
+        if (PLAYING_ONLINE && !IsOwner)
         {
             CI.Camera.gameObject.SetActive(false);
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+
+        isNetSpawned = true;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(!PLAYING_ONLINE || IsOwner) 
-        { 
+        if ((PLAYING_ONLINE && isNetReady == false && isNetSpawned && Input.GetKeyDown(KeyCode.Space)) || Input.GetKeyDown(KeyCode.F)) 
+        {
+            Debug.Log("LOBBY VAL KART " + LobbyScript.gameColorID);
+            Debug.Log("LOBBY VAL CHAR " + LobbyScript.gameIconID);
+            if (PLAYING_ONLINE && IsOwner)
+            {
+                playerCharacter.Value = LobbyScript.gameIconID;
+                playerKart.Value = LobbyScript.gameColorID;
+            }
+            isNetReady = true;
+            CallNetReadyServerRpc();
+
+        }
+        else if (!PLAYING_ONLINE || IsOwner)
+        {
             //ACCELERATION
             if (Input.GetButton("Vertical") && Time.timeScale == 1)
             {
@@ -200,11 +230,11 @@ public class PlayerMovement : NetworkBehaviour
 
             }
 
-        
+
 
             RaycastHit groundHit;
 
-            if(Physics.Raycast(plrKart.transform.position, Vector3.down, out groundHit, groundDist))
+            if (Physics.Raycast(plrKart.transform.position, Vector3.down, out groundHit, groundDist))
             {
                 canHop = true;
                 if (state == DriftStates.StartDrift && hopTimer > hopTime)
@@ -218,7 +248,7 @@ public class PlayerMovement : NetworkBehaviour
                         //Get drift direction to hold throughout drift
 
                         turnPointer.transform.forward = plrKart.transform.forward;
-                        turnPointer.transform.Rotate(new Vector3(0,driftPivot * driftDirection,0));
+                        turnPointer.transform.Rotate(new Vector3(0, driftPivot * driftDirection, 0));
 
                         //Visual
                         driftRotate = 0f;
@@ -234,10 +264,10 @@ public class PlayerMovement : NetworkBehaviour
                     }
 
                 }
-            
+
             }
 
-            if(state == DriftStates.Drifting)
+            if (state == DriftStates.Drifting)
             {
                 float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
                 //If drifting into direction, will be 1.5, if drifting away, will be 0.5
@@ -259,7 +289,7 @@ public class PlayerMovement : NetworkBehaviour
 
             kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
             kartModel.transform.Rotate(0, plrKart.transform.eulerAngles.y, 0);
-            if(state == DriftStates.Drifting)
+            if (state == DriftStates.Drifting)
             {
                 driftRotate = Mathf.Lerp(driftRotate, visualTurn + (visualIncrement * Input.GetAxisRaw("Horizontal") * driftDirection), Time.deltaTime * 8f);
                 //Lerp the rotation for drifing, adding on extra turn depdning on the direction player is holding relative to the drift
@@ -317,11 +347,12 @@ public class PlayerMovement : NetworkBehaviour
                     uiManagerReference.pauseMenuPanel.SetActive(false);
                     gameHUD.SetActive(true);
                 }
-        }   }
+            }
+        }
     }
     private void FixedUpdate()
     {
-        if(!PLAYING_ONLINE || IsOwner)
+        if (!PLAYING_ONLINE || IsOwner)
         {
             if (boostPower > 0)
             {
@@ -340,7 +371,7 @@ public class PlayerMovement : NetworkBehaviour
             hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
             //Visual: Making wheel speed match horizontal velocity
-           // VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
+            // VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
             VI.rearWheels.Rotate(0, hVelocity.magnitude * VI.backWheelSPeed, 0);
 
 
@@ -452,7 +483,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             GetCollectable();
         }
-        
+
     }
 
     public void GetCollectable()
@@ -465,6 +496,24 @@ public class PlayerMovement : NetworkBehaviour
         externalBoostSources += 1;
         externalBoost = (externalBoost + boost) / externalBoostSources;
     }
-    
+
+
+
+
+    //Network functions go here:
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    private void CallNetReadyServerRpc()
+    {//Call to the server that this player is ready to connect
+        ApplyPlayerSkinClientRpc();
+    }
+
+    [ClientRpc]
+    private void ApplyPlayerSkinClientRpc()
+    {
+        Debug.Log("KART " + playerKart.Value);
+        Debug.Log("CHAR " + playerCharacter.Value);
+        skinRef.updateAppearance(playerKart.Value, playerCharacter.Value);
+    }
 
 }

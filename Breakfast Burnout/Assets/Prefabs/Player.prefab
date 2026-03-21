@@ -1590,7 +1590,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  PLAYING_ONLINE: 0
+  playerID:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  playerKart:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  playerCharacter:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
   plrObj: {fileID: 118092939427355276}
   plrKart: {fileID: 8127721057741285870}
   kartModel: {fileID: 2558522085608657152}
@@ -1633,6 +1647,7 @@ MonoBehaviour:
   rescaleSpeed: 8
   hopStretch: {x: 0.8, y: 1.5, z: 0.8}
   driftSquash: {x: 1, y: 0.8, z: 1}
+  skinRef: {fileID: 936261008267303258}
   extraGravity: 60
   groundDist: 3
   currentSpeed: 0

@@ -59,7 +59,7 @@ public class ResultsScreen : MonoBehaviour
                     }
                     else
                     {
-                        SceneManager.LoadScene("ErykTestScene");
+                        SceneManager.LoadScene("AshTestScene");
                     }
                     state = 2;
                 }

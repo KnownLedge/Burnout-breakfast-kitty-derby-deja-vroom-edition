@@ -60,7 +60,7 @@ public class LobbyScript : MonoBehaviour
 
     private async void Start()
     {
-
+        NetworkInfo.PLAYING_ONLINE = true;
         playerName = "Player" + UnityEngine.Random.Range(10, 99); //Placeholder player name incase player avoids setting it somehow
 
         await UnityServices.InitializeAsync();

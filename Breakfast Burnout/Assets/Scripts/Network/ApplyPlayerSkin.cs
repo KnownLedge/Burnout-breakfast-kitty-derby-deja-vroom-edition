@@ -16,7 +16,7 @@ public class ApplyPlayerSkin : MonoBehaviour
     public GameObject currentCat;
     void Start()
     {
-        updateAppearance(kartid, catid);
+       // updateAppearance(kartid, catid);
     }
 
     public void updateAppearance(int kartSkin, int catSkin)
