@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class NetworkInfo : MonoBehaviour
 {
-    public static bool PLAYING_ONLINE = true;
+    public static bool PLAYING_ONLINE = false;
 
 
     public void setOffline()
