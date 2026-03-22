@@ -466,4 +466,13 @@ public class LobbyScript : MonoBehaviour
     }
 
 
+    public void ReturnToMenu()
+    {
+        if(hostLobby != null || joinLobby != null)
+        {
+            LeaveLobby();
+        }
+        SceneManager.LoadScene("MainMenu");
+    }
+
 }

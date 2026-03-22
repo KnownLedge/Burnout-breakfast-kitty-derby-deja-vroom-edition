@@ -23,6 +23,10 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene("RACESCENE");
     }
 
+    public void OnlineStart()
+    {
+        SceneManager.LoadScene("OnlineLobby");
+    }
     public void MainMenuSettings()
     {
         settingsPanel.SetActive(true);
