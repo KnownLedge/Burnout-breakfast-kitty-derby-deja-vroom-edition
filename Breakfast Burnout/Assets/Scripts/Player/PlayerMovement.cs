@@ -354,7 +354,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!PLAYING_ONLINE || IsOwner)
         {
-            if (boostPower > 0)
+            if (currentSpeed > 10)
             {
                 plrObjRb.AddForce(turnPointer.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
 
