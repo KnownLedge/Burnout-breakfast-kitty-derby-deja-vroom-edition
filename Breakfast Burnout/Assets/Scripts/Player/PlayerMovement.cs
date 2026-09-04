@@ -283,8 +283,8 @@ public class PlayerMovement : NetworkBehaviour
             RaycastHit hitOn;
             RaycastHit hitNear;
 
-            Physics.Raycast(plrKart.transform.position, Vector3.down, out hitOn, 1.1f);
-            Physics.Raycast(plrKart.transform.position, Vector3.down, out hitNear, 2.0f);
+            Physics.Raycast(plrKart.transform.position, Vector3.down, out hitOn, groundDist + 1.1f);
+            Physics.Raycast(plrKart.transform.position, Vector3.down, out hitNear, groundDist + 2.0f);
 
 
             kartModel.transform.up = Vector3.Lerp(kartModel.transform.up, hitNear.normal, Time.deltaTime * 8.0f);
