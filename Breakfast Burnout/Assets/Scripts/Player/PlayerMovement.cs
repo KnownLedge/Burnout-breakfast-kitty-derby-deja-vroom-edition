@@ -45,6 +45,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("Turning")]
     public float turnRate;
+    public float turnFix = 0f; //How much the velocity is redirected to players facing direction
 
     public enum DriftStates { Steering, StartDrift, Drifting };
     [Header("States")]
@@ -354,31 +355,47 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!PLAYING_ONLINE || IsOwner)
         {
-            if (currentSpeed > 10)
-            {
-                plrObjRb.AddForce(turnPointer.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
-
-            }
-            else
-            {
-                plrObjRb.AddForce(turnPointer.transform.forward * currentSpeed, ForceMode.Acceleration);
-            }
-
-            //Turnpointer faces the same way as player kart, but will be turned when drifting to make turning go at an odd angle
 
             Vector3 hVelocity = plrObjRb.linearVelocity;
             hVelocity.y = 0;
-            hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
+            if (hVelocity.magnitude < topSpeed)
+            {
+                if (currentSpeed > 10)
+                {
+                    plrObjRb.AddForce(turnPointer.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
+
+                }
+                else
+                {
+                    plrObjRb.AddForce(turnPointer.transform.forward * currentSpeed, ForceMode.Acceleration);
+                }
+            }
+
+            //Turnpointer faces the same way as player kart, but will be turned when drifting to make turning go at an odd angle
+             hVelocity = plrObjRb.linearVelocity;
+
+            hVelocity.y = 0;
+            //hVelocity = Vector3.ClampMagnitude(hVelocity, topSpeed);
 
             //Visual: Making wheel speed match horizontal velocity
             // VI.frontWheels.Rotate(0, hVelocity.magnitude * VI.frontWheelSpeed, 0);
             VI.rearWheels.Rotate(0, hVelocity.magnitude * VI.backWheelSPeed, 0);
 
+            Vector3 forceDir = hVelocity.normalized;
+            Vector3 playerDir;
+            if (currentSpeed >= 0)
+            {
+                playerDir = turnPointer.transform.forward;
+            }
+            else
+            {
+                playerDir = -turnPointer.transform.forward;
+            }
+                Vector3 correctedHVelocity = Vector3.Lerp(forceDir, playerDir, turnFix).normalized * hVelocity.magnitude;
 
+            correctedHVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
 
-            hVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
-
-            plrObjRb.linearVelocity = new Vector3(hVelocity.x, plrObjRb.linearVelocity.y, hVelocity.z);
+            plrObjRb.linearVelocity = new Vector3(correctedHVelocity.x, plrObjRb.linearVelocity.y, correctedHVelocity.z);
 
 
             Quaternion targetRotation = new Quaternion();
