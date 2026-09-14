@@ -55,10 +55,13 @@ public class PlayerMovement : NetworkBehaviour
     public float hopTime; //How long the hop last before gravity kicks in
     public float hopForce;
     public float driftGrav; //Extra gravity while drifting
+    public float driftForce; //Force to apply on the kart sideways while drifting
 
 
     [Header("Drifting")]
     public float driftPower = 0.75f;
+    public float driftInfluencePos = 0f; //How much left/right inputs influence the drift angle drifing into the turn
+    public float driftInfluenceNeg = 0f; //How much left/right inputs influence the drift angle drifing away from the turn
     public float driftPivot; //How much the drift changes the turn angle by while drift is active
     public float[] driftRequirements = { 3, 6, 9 };
     public float[] boostStrengths = { 5, 8, 10 };
@@ -86,12 +89,15 @@ public class PlayerMovement : NetworkBehaviour
     [Header("DEBUG")]
     //SPEED
     [SerializeField] private float currentSpeed;
+    [SerializeField] private Vector3 hVelocity; //Horizontal velocity player is moving at
     [SerializeField] internal Vector3 externalBoost; //Boost applied by external sources, useful for things like conveyors or water streams.
     [SerializeField] private int externalBoostSources; //Amount of objects trying to apply external boost to the player
+    [SerializeField] private bool drivingForward; //Whether player last accel input was to drive forward or backward
 
     //TURNING
     [SerializeField] private float currentRotate;
     [SerializeField] private float rotate = 0;
+    [SerializeField] private Vector3 driveForward;
 
     //DRIFT HOP
     [SerializeField] private bool canHop = true;
@@ -108,6 +114,9 @@ public class PlayerMovement : NetworkBehaviour
 
     [SerializeField] private Vector3 initScale; //Original scale of object
     [SerializeField] private Vector3 intendScale;// Intended scale of object in current time in gameplay
+
+    //REFERENCE
+    [SerializeField] private Transform reversePointer; //child of turnpointer that faces the opposite direction, for easy reversing force
 
 
     void Start()
@@ -126,6 +135,9 @@ public class PlayerMovement : NetworkBehaviour
         {
             CI.Camera.gameObject.SetActive(false);
         }
+
+        reversePointer = turnPointer.GetComponentInChildren<Transform>();
+
     }
 
     public override void OnNetworkSpawn()
@@ -153,15 +165,26 @@ public class PlayerMovement : NetworkBehaviour
         else if (!PLAYING_ONLINE || IsOwner)
         {
             //ACCELERATION
+            driveForward = reversePointer.forward;
             if (Input.GetButton("Vertical") && Time.timeScale == 1)
             {
-                currentSpeed = acceleration * Input.GetAxisRaw("Vertical");
+                currentSpeed = acceleration;// * Input.GetAxisRaw("Vertical");
+                if(Input.GetAxisRaw("Vertical") < 0)
+                {
+                    drivingForward = false;
+                }
+                else
+                {
+                    drivingForward = true;
+                    //driveForward = reversePointer.forward;
+                }
             }
             else
             {
+
                 currentSpeed = 0;
             }
-
+            driveForward = (drivingForward) ? reversePointer.forward : -reversePointer.forward;
 
             //STEERING
             if (Input.GetAxisRaw("Horizontal") != 0 && state != DriftStates.StartDrift && Time.timeScale == 1)
@@ -199,6 +222,9 @@ public class PlayerMovement : NetworkBehaviour
 
                 plrObjRb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
                 //Drift hop
+                driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                turnPointer.transform.forward = plrKart.transform.forward;
+                turnPointer.transform.Rotate(new Vector3(0, driftPivot * driftDirection, 0));
 
                 //VISUAL
                 kartModel.transform.localScale = hopStretch;
@@ -230,41 +256,41 @@ public class PlayerMovement : NetworkBehaviour
                 intendScale = initScale;
 
             }
+            //Yoinked this from the ground check below to skip having to hit the ground to drift, maybe a bad idea we'll see
+            if (state == DriftStates.StartDrift && hopTimer > hopTime)
+            {
+                if (Input.GetAxisRaw("Horizontal") != 0)
+                {// If moving left/right, starting a drift and the timer for starting a drift is up
+                    state = DriftStates.Drifting;
+                    Debug.Log("DRifting now!");
+                    //Then start a drift
+                    driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                    //Get drift direction to hold throughout drift
+
+                    turnPointer.transform.forward = plrKart.transform.forward;
+                    turnPointer.transform.Rotate(new Vector3(0, driftPivot * driftDirection, 0));
+
+                    //Visual
+                    driftRotate = 0f;
+                    audio.PlayOneShot(SL.driftStart);
+                    audio.Play();
 
 
+                }
+                else//Direction was not held when drift should start, cancel drift
+                {
+                    state = DriftStates.Steering;
+                    hopTimer = 0f;
+                }
+
+            }
 
             RaycastHit groundHit;
 
             if (Physics.Raycast(plrKart.transform.position, Vector3.down, out groundHit, groundDist))
             {
                 canHop = true;
-                if (state == DriftStates.StartDrift && hopTimer > hopTime)
-                {
-                    if (Input.GetAxisRaw("Horizontal") != 0)
-                    {// If moving left/right, starting a drift and the timer for starting a drift is up
-                        state = DriftStates.Drifting;
-                        Debug.Log("DRifting now!");
-                        //Then start a drift
-                        driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
-                        //Get drift direction to hold throughout drift
-
-                        turnPointer.transform.forward = plrKart.transform.forward;
-                        turnPointer.transform.Rotate(new Vector3(0, driftPivot * driftDirection, 0));
-
-                        //Visual
-                        driftRotate = 0f;
-                        audio.PlayOneShot(SL.driftStart);
-                        audio.Play();
-
-
-                    }
-                    else//Direction was not held when drift should start, cancel drift
-                    {
-                        state = DriftStates.Steering;
-                        hopTimer = 0f;
-                    }
-
-                }
+ 
 
             }
 
@@ -272,7 +298,15 @@ public class PlayerMovement : NetworkBehaviour
             {
                 float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
                 //If drifting into direction, will be 1.5, if drifting away, will be 0.5
-                Steer(driftDirection, control * driftPower);
+                if (control >= 1.5)
+                {
+                    control += driftInfluencePos;
+                } else if (control <= 0.5f)
+                {
+                    control += driftInfluenceNeg;
+                }
+
+                    Steer(driftDirection, control * driftPower);
                 driftCharge += control * Time.deltaTime;
                 //steer with drift change
             }
@@ -356,18 +390,18 @@ public class PlayerMovement : NetworkBehaviour
         if (!PLAYING_ONLINE || IsOwner)
         {
 
-            Vector3 hVelocity = plrObjRb.linearVelocity;
+            hVelocity = plrObjRb.linearVelocity;
             hVelocity.y = 0;
             if (hVelocity.magnitude < topSpeed)
             {
                 if (currentSpeed > 10)
                 {
-                    plrObjRb.AddForce(turnPointer.transform.forward * (currentSpeed + boostForce), ForceMode.Acceleration);
+                    plrObjRb.AddForce(driveForward * (currentSpeed + boostForce), ForceMode.Acceleration);
 
                 }
                 else
                 {
-                    plrObjRb.AddForce(turnPointer.transform.forward * currentSpeed, ForceMode.Acceleration);
+                    plrObjRb.AddForce(driveForward * currentSpeed, ForceMode.Acceleration);
                 }
             }
 
@@ -383,14 +417,17 @@ public class PlayerMovement : NetworkBehaviour
 
             Vector3 forceDir = hVelocity.normalized;
             Vector3 playerDir;
-            if (currentSpeed >= 0)
-            {
-                playerDir = turnPointer.transform.forward;
-            }
-            else
-            {
-                playerDir = -turnPointer.transform.forward;
-            }
+            //if (true)
+            //{
+            //    playerDir = turnPointer.transform.forward;
+            //}
+            //else
+            //{
+            //    playerDir = -turnPointer.transform.forward;
+            //}
+
+            playerDir = driveForward;
+
                 Vector3 correctedHVelocity = Vector3.Lerp(forceDir, playerDir, turnFix).normalized * hVelocity.magnitude;
 
             correctedHVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
@@ -408,6 +445,9 @@ public class PlayerMovement : NetworkBehaviour
             if (state == DriftStates.StartDrift || state == DriftStates.Drifting)
             {
                 hopTimer += Time.deltaTime;
+
+
+                plrObjRb.AddForce((turnPointer.transform.right * driftDirection) * driftForce, ForceMode.Acceleration);
 
                 if (hopTimer > hopTime)
                 {
