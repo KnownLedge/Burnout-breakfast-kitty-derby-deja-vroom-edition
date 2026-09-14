@@ -90,6 +90,8 @@ public class PlayerMovement : NetworkBehaviour
     //SPEED
     [SerializeField] private float currentSpeed;
     [SerializeField] private Vector3 hVelocity; //Horizontal velocity player is moving at
+    [SerializeField] private float currentVelocityH; //Current horizontal velocity
+    [SerializeField] private float currentVelocityALL; // Current velocity
     [SerializeField] internal Vector3 externalBoost; //Boost applied by external sources, useful for things like conveyors or water streams.
     [SerializeField] private int externalBoostSources; //Amount of objects trying to apply external boost to the player
     [SerializeField] private bool drivingForward; //Whether player last accel input was to drive forward or backward
@@ -391,7 +393,9 @@ public class PlayerMovement : NetworkBehaviour
         {
 
             hVelocity = plrObjRb.linearVelocity;
+            currentVelocityALL = hVelocity.magnitude;
             hVelocity.y = 0;
+            currentVelocityH = hVelocity.magnitude;
             if (hVelocity.magnitude < topSpeed)
             {
                 if (currentSpeed > 10)
