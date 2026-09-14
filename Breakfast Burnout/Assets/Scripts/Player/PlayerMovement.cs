@@ -506,19 +506,19 @@ public class PlayerMovement : NetworkBehaviour
         {
             boostPower = boostStrengths[2];
             plrObjRb.AddForce(plrKart.transform.forward * boostBursts[2], ForceMode.Impulse);
-            CI.Camera.fieldOfView = CI.burstFov[2];
+           // CI.Camera.fieldOfView = CI.burstFov[2];
         }
         else if (driftCharge > driftRequirements[1])
         {
             boostPower = boostStrengths[1];
             plrObjRb.AddForce(plrKart.transform.forward * boostBursts[1], ForceMode.Impulse);
-            CI.Camera.fieldOfView = CI.burstFov[1];
+           // CI.Camera.fieldOfView = CI.burstFov[1];
         }
         else if (driftCharge > driftRequirements[0])
         {
             boostPower = boostStrengths[0];
             plrObjRb.AddForce(plrKart.transform.forward * boostBursts[0], ForceMode.Impulse);
-            CI.Camera.fieldOfView = CI.burstFov[0];
+           // CI.Camera.fieldOfView = CI.burstFov[0];
         }
 
 
