@@ -7,6 +7,9 @@ public class CameraInfo : MonoBehaviour
     public Camera Camera;
     public float pivotDist = 5f;
     public float pivotSpeed = 4f;
+    public bool twoPivotSpeeds = false;
+    public float outPivotSpeed = 0.5f;
+    public float inPivotSpeed = 2f;
 
     public float defaultFov = 90f;
     public float boostFov = 100f;

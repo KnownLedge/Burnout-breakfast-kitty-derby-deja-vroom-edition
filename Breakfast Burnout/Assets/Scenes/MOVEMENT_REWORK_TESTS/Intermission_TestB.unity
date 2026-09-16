@@ -126658,7 +126658,7 @@ PrefabInstance:
     - target: {fileID: 1855463598367975224, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1204386559
+      value: 3470310542
       objectReference: {fileID: 0}
     - target: {fileID: 1855463598367975224, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
@@ -126708,7 +126708,22 @@ PrefabInstance:
     - target: {fileID: 6730685476399543925, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
       propertyPath: pivotSpeed
-      value: 2
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6730685476399543925, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: inPivotSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6730685476399543925, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: outPivotSpeed
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6730685476399543925, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
+      propertyPath: twoPivotSpeeds
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6730685476399543925, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}

@@ -334,11 +334,21 @@ public class PlayerMovement : NetworkBehaviour
                 Vector3 camTargetPos = CI.Camera.transform.localPosition;
                 camTargetPos.x = 0;
                 camTargetPos.x += CI.pivotDist * driftDirection;
+
+                if (CI.twoPivotSpeeds)
+                {
+                    CI.pivotSpeed = CI.outPivotSpeed;
+                }
+
                 CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
 
             }
             else
             {
+                if(CI.twoPivotSpeeds)
+                {
+                    CI.pivotSpeed = CI.inPivotSpeed;
+                }
                 Vector3 camTargetPos = CI.Camera.transform.localPosition;
                 camTargetPos.x = 0;
                 CI.Camera.transform.localPosition = Vector3.Lerp(CI.Camera.transform.localPosition, camTargetPos, Time.deltaTime * CI.pivotSpeed);
