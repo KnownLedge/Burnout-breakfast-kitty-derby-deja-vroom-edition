@@ -126612,6 +126612,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
         type: 3}
+      propertyPath: boostPower
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1055746492343184874, guid: c4d2081eb1856c949957fa066f5fe8bf,
+        type: 3}
       propertyPath: driftForce
       value: -140
       objectReference: {fileID: 0}

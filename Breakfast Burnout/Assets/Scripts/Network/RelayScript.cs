@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Relay;
@@ -21,6 +22,8 @@ public class RelayScript : MonoBehaviour
         //};
 
         //await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+
     }
 
 
@@ -28,8 +31,7 @@ public class RelayScript : MonoBehaviour
     {
         try
         {
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
-
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(5); // Change this to 5 to allow 6 players!
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
             Debug.Log(joinCode);
@@ -41,6 +43,19 @@ public class RelayScript : MonoBehaviour
                 allocation.Key,
                 allocation.ConnectionData
                 );
+
+            //Code partly assisted by ai (I know mostly what its doing, but i feel like i should state this)
+            //(try looking up how to do this it legit don't exist :( )
+            var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+
+            transport.UseWebSockets = true;
+
+            string connectionType = "wss";
+            RelayServerData relayData = AllocationUtils.ToRelayServerData(allocation, connectionType);
+
+            transport.SetRelayServerData(relayData);
+            //end of ai assisted code
+
             NetworkManager.Singleton.StartHost();
 
             return joinCode;
@@ -69,6 +84,18 @@ public class RelayScript : MonoBehaviour
     joinAllocation.ConnectionData,
     joinAllocation.HostConnectionData
     );
+
+            //Code partly assisted by ai (I know mostly what its doing, but i feel like i should state this)
+            //(try looking up how to do this it legit don't exist :( )
+            var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+
+            transport.UseWebSockets = true;
+
+            string connectionType = "wss";
+            RelayServerData relayData = AllocationUtils.ToRelayServerData(joinAllocation, connectionType);
+
+            transport.SetRelayServerData(relayData);
+            //end of ai assisted code
 
 
             NetworkManager.Singleton.StartClient();
