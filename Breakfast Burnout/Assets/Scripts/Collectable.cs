@@ -70,8 +70,14 @@ public class Collectable : MonoBehaviour
             rotateSpeed *= 3;
             hoverSpeed *= 1.5f;
             maxHeight *= 2;
-            totalLoops += 1;
-            heightLerp = 0;
+            if (NetworkInfo.PLAYING_ONLINE == false)
+            {
+                totalLoops += 1;
+            }else if (other.GetComponentInParent<PlayerMovement>().IsOwner)
+            {
+                totalLoops += 1;
+            }
+                heightLerp = 0;
             other.transform.parent.GetComponent<PlayerMovement>().GetCollectable();
         }
     }

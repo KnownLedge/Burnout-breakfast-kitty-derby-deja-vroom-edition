@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using Unity.Netcode;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ResultsScreen : MonoBehaviour
 {
@@ -21,15 +22,52 @@ public class ResultsScreen : MonoBehaviour
     public List<Image> backgroundImages;
     public List<TMP_Text> racerTitles;
 
+    //ONLINE
+    public NetworkRaceManager raceManager;
+
     void Start()
     {
+        if (NetworkInfo.PLAYING_ONLINE)
+        {
+            raceManager = NetworkManager.Singleton.GetComponent<NetworkRaceManager>();
+        }
      startPos = standingsObj.localPosition;   
         if(checkRef != null)
         {
             for(int i = 0; i < checkRef.raceResults.Count; i++)
             {
-                backgroundImages[i].color = playerColors[checkRef.raceResults[i]];
-                racerTitles[i].text = npcNames[checkRef.raceResults[i]];
+                int checkedID = checkRef.raceResults[i];
+                if (!NetworkInfo.PLAYING_ONLINE ||  checkRef.isPlayer[checkedID] == false && checkRef.playerID != checkedID)
+                {
+                    backgroundImages[i].color = playerColors[checkedID];
+                    racerTitles[i].text = npcNames[checkedID];
+                }
+                else if(checkRef.isPlayer[checkedID]) 
+                {
+                    if (raceManager.ActivePlayers[checkedID].playerKart.Value - 1 != -1)
+                    {
+                        backgroundImages[i].color = playerColors[raceManager.ActivePlayers[checkedID].playerKart.Value - 1]; //Set background color to color of players kart
+                    }
+                    else
+                    {
+                        backgroundImages[i].color = playerColors[playerColors.Count - 1];
+                    }
+                        racerTitles[i].text = raceManager.ActivePlayers[checkedID].playerName.Value.ToString(); //Sets character name to player name, IDENTIFICATION!!!
+                }
+                else //Dealing with system player
+                {
+
+                    if (raceManager.ActivePlayers[checkedID].playerKart.Value - 1 != -1)
+                    {
+                        backgroundImages[i].color = playerColors[checkRef.playerMovement.playerKart.Value - 1]; //Set background color to color of players kart
+                    }
+                    else
+                    {//Loop around to default player color
+                        backgroundImages[i].color = playerColors[playerColors.Count - 1];
+                    }
+
+                    racerTitles[i].text = checkRef.playerMovement.playerName.Value.ToString(); //Sets character name to player name, IDENTIFICATION!!!
+                }
             }
         }
     }

@@ -11561,6 +11561,7 @@ GameObject:
   - component: {fileID: 1950257537}
   - component: {fileID: 1950257538}
   - component: {fileID: 1950257539}
+  - component: {fileID: 1950257540}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -11612,7 +11613,7 @@ MonoBehaviour:
   - {fileID: 955720169}
   customizationInfo: {fileID: 1381284750}
   maxLobbyPlayerId: 5
-  defaultGameScene: RyanTestScene
+  defaultGameScene: NETWORKRACESCENE
   relayScript: {fileID: 1950257537}
 --- !u!4 &1950257536
 Transform:
@@ -11687,7 +11688,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1950257538}
-    PlayerPrefab: {fileID: 4915128266062320988, guid: c4d2081eb1856c949957fa066f5fe8bf,
+    PlayerPrefab: {fileID: 6042007971060496473, guid: 60fb72b1a6c007342bcb4dfe84f1194d,
       type: 3}
     Prefabs:
       NetworkPrefabsLists:
@@ -11715,6 +11716,22 @@ MonoBehaviour:
     OldPrefabList: []
   RunInBackground: 1
   LogLevel: 1
+--- !u!114 &1950257540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950257534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d46c2156dc168e3478b84adb313824b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ActivePlayers: []
+  HostPlayer: {fileID: 0}
+  loadedPlayerCount: 0
+  netReady: 0
 --- !u!1 &1957457460
 GameObject:
   m_ObjectHideFlags: 0

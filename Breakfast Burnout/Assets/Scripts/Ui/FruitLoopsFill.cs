@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +11,13 @@ public class FruitLoopsFill : MonoBehaviour
     public bool fillOnAwake = false;
     public bool shouldFill = false;
 
+    public TMP_Text playersLoadedText;
+
     private float fillTimer = 1f;
 
     public bool isFill = false;
+
+    private NetworkRaceManager raceManager;
 
     void Start()
     {
@@ -25,17 +31,38 @@ public class FruitLoopsFill : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (shouldFill)
+        if (NetworkInfo.PLAYING_ONLINE)
         {
-            image.fillAmount += fillTimer * Time.deltaTime;
-            if(image.fillAmount >= 1)
-                isFill = true;
+            raceManager = NetworkManager.Singleton.GetComponent<NetworkRaceManager>();
         }
-        else
+
+        if (!NetworkInfo.PLAYING_ONLINE || raceManager.netReady)
         {
-            image.fillAmount -= fillTimer * Time.deltaTime;
-            if (image.fillAmount <= 0)
-                isFill = false;
+            if (playersLoadedText != null)
+            {
+                playersLoadedText.gameObject.SetActive(false);
+            }
+                if (shouldFill)
+            {
+                image.fillAmount += fillTimer * Time.deltaTime;
+                if (image.fillAmount >= 1)
+                    isFill = true;
+            }
+            else
+            {
+                image.fillAmount -= fillTimer * Time.deltaTime;
+                if (image.fillAmount <= 0)
+                    isFill = false;
+            }
+        }
+        else if(playersLoadedText != null)
+        {
+            playersLoadedText.gameObject.SetActive(true);
+            playersLoadedText.text = raceManager.loadedPlayerCount.ToString() +"/" + LobbyScript.expectedPlayers.ToString();
+            if(raceManager.ActivePlayers.Count >= LobbyScript.expectedPlayers)
+            {
+                //playersLoadedText.gameObject.SetActive(false);
+            }
         }
     }
 }

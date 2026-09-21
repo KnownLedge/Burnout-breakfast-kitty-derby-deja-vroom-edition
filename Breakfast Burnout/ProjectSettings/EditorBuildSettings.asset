@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/RACESCENE.unity
     guid: ed626453a9c921c4d81809ab9e0a7b25
   - enabled: 1
+    path: Assets/Scenes/NetWork/NETWORKRACESCENE.unity
+    guid: c560ecfbb1bed0849988435fd1d0fa81
+  - enabled: 1
     path: Assets/Scenes/TestScenes/AshTestScene.unity
     guid: cc74ae9e76d27ed49ba0acfb27d0ad9c
   - enabled: 1

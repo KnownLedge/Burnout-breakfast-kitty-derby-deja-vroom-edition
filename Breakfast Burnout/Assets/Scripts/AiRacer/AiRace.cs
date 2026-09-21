@@ -35,6 +35,10 @@ public class AiRace : MonoBehaviour
     // Start is called before the first frame update
     internal void Start()
     {
+        if(NetworkInfo.PLAYING_ONLINE && LobbyScript.expectedPlayers > npcRacerIndex)
+        {
+            Destroy(gameObject); //Npc replaced by real player
+        }
         if (physObj == null)
         {
             physObj = transform.Find("PlayerObj").gameObject;
