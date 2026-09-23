@@ -70,6 +70,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("Drifting")]
     public float driftPower = 0.75f;
+    public bool driftPercInfluence = true; //Whether to use the old drift influence method, IF MAKING NEW MOVEMENT VALUES, JUST SET THIS TO FALSE *PLEASE*
     public float driftInfluencePos = 0f; //How much left/right inputs influence the drift angle drifing into the turn
     public float driftInfluenceNeg = 0f; //How much left/right inputs influence the drift angle drifing away from the turn
     public float driftPivot; //How much the drift changes the turn angle by while drift is active
@@ -334,17 +335,31 @@ public class PlayerMovement : NetworkBehaviour
                 if (state == DriftStates.Drifting)
                 {
                     float control = Mathf.Abs((Input.GetAxis("Horizontal") / 2) + driftDirection);
+                    float currentDriftPower = driftPower;
                     //If drifting into direction, will be 1.5, if drifting away, will be 0.5
-                    if (control >= 1.5)
+                    if (driftPercInfluence)
                     {
-                        control += driftInfluencePos;
+                        if (control >= 1.5)
+                        {
+                            control += driftInfluencePos;
+                        }
+                        else if (control <= 0.5f)
+                        {
+                            control += driftInfluenceNeg;
+                        }
                     }
-                    else if (control <= 0.5f)
+                    else
                     {
-                        control += driftInfluenceNeg;
+                        if (control >= 1.5)
+                        {
+                            currentDriftPower += driftInfluencePos;
+                        }
+                        else if (control <= 0.5f)
+                        {
+                            currentDriftPower += driftInfluenceNeg;
+                        }
                     }
-
-                    Steer(driftDirection, control * driftPower);
+                    Steer(driftDirection, control * currentDriftPower);
                     driftCharge += control * Time.deltaTime;
                     //steer with drift change
                 }
