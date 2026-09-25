@@ -52,9 +52,16 @@ public class PlayerMovement : NetworkBehaviour
     public float acceleration;
     public float topSpeed;
     public float speedDecay; //How much velcity is divided by each fixed step, used to help redirect turning
+    public bool useNewAccel; //Boolean option to trigger new acceleration type, this is only here to not break our previous movement tests
+    //If this new accel method ends up favoured, feel free to scrap the old one for code space
+    public float idleDeccel; //How fast player loses speed value (ONLY WORKS WITH NEW ACCEL)
+    public float reverseDeccel; //How fast player loses speed while reversing (or gains speed if, yknow, reversing)
+    public float reverseTopSpeed; //How fast you can reverse maximum
 
     [Header("Turning")]
     public float turnRate;
+    public float turnSpeedLoss = 0f; //How much speed the player loses by turning without drfiting
+    public float turnSpeedLossLimit = 80f; //How much speed the player can lose by turning 
     public float turnFix = 0f; //How much the velocity is redirected to players facing direction
 
     public enum DriftStates { Steering, StartDrift, Drifting };
@@ -106,7 +113,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float currentVelocityALL; // Current velocity
     [SerializeField] internal Vector3 externalBoost; //Boost applied by external sources, useful for things like conveyors or water streams.
     [SerializeField] private int externalBoostSources; //Amount of objects trying to apply external boost to the player
-    [SerializeField] private bool drivingForward; //Whether player last accel input was to drive forward or backward
+    [SerializeField] private bool drivingForward = true; //Whether player last accel input was to drive forward or backward
 
 
     //TURNING
@@ -165,6 +172,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             checkpointRef = GameObject.FindFirstObjectByType<CheckpointSystem>();
         }
+        drivingForward = true;
     }
 
     public override void OnNetworkSpawn()
@@ -206,21 +214,67 @@ public class PlayerMovement : NetworkBehaviour
                 driveForward = reversePointer.forward;
                 if (Input.GetButton("Vertical") && Time.timeScale == 1)
                 {
-                    currentSpeed = acceleration;// * Input.GetAxisRaw("Vertical");
-                    if (Input.GetAxisRaw("Vertical") < 0)
+                    if (useNewAccel)
                     {
-                        drivingForward = false;
+                        int isForw = Input.GetAxis("Vertical") > 0 ? 1 : -1;
+                        if (isForw == 1)
+                        {
+                            if (currentSpeed < topSpeed)// if something has put us over top speed, avoid killing the speed value with the clamp
+                            {
+                                currentSpeed = Mathf.Clamp(currentSpeed + (acceleration * Time.deltaTime), 0, topSpeed);
+                            }
+                        }
+                        else
+                        {
+                            if (currentSpeed > 0)
+                            {
+                                currentSpeed -= (reverseDeccel + idleDeccel) * Time.deltaTime;
+                                if (currentSpeed < 0) currentSpeed = 0; //Pause the deccel if we hit 0
+
+                            }
+                            else //NOTE maybe make a timer that builds only when player is at 0 speed or below, then make that timer be a requirement for actually reversing?
+                            {
+                                currentSpeed = Mathf.Clamp(currentSpeed - (reverseDeccel * Time.deltaTime), -reverseTopSpeed, 0);
+                            }
+                        }
                     }
                     else
                     {
-                        drivingForward = true;
-                        //driveForward = reversePointer.forward;
+                        currentSpeed = acceleration;// * Input.GetAxisRaw("Vertical");
+                        if (Input.GetAxisRaw("Vertical") < 0)
+                        {
+                            drivingForward = false;
+                        }
+                        else
+                        {
+                            drivingForward = true;
+                            //Not sure i like this method of going forward/reversing
+                            //driveForward = reversePointer.forward;
+                        }
                     }
+
                 }
                 else
                 {
+                    if (useNewAccel)
+                    {
+                        if(currentSpeed > 0)
+                        {
+                            currentSpeed -= idleDeccel * Time.deltaTime;
+                            if (currentSpeed < 0) currentSpeed = 0; //Pause the deccel if we hit 0
 
+                        }
+                        else
+                        {// speed up the player to reach 0 to stop them moving backwards
+                            currentSpeed += idleDeccel * Time.deltaTime;
+                            if (currentSpeed > 0) currentSpeed = 0; //Pause the deccel if we hit 0
+                        }
+                    }
+                    else
+                    {
                     currentSpeed = 0;
+
+                    }
                 }
                 driveForward = (drivingForward) ? reversePointer.forward : -reversePointer.forward;
 
@@ -231,7 +285,18 @@ public class PlayerMovement : NetworkBehaviour
                     //Get input as either -1 to 1
                     float amount = Mathf.Abs(Input.GetAxis("Horizontal"));
                     Steer(dir, amount);
+                    if(state == DriftStates.Steering)
+                    {
+                        if (Mathf.Abs(currentSpeed) > turnSpeedLossLimit)
+                        {
+                            currentSpeed -= turnSpeedLoss * Time.deltaTime * Mathf.Sign(currentSpeed);
+                            if (Mathf.Abs(currentSpeed) < turnSpeedLossLimit)
+                            {
+                                currentSpeed = turnSpeedLossLimit * Mathf.Sign(currentSpeed);
+                            }//Saves me time doing a two sided clamp
+                        }
 
+                    }
 
                 }
 
@@ -269,7 +334,7 @@ public class PlayerMovement : NetworkBehaviour
                     intendScale = driftSquash;
 
                 }
-                else if (Input.GetButtonUp("Jump"))
+                else if (Input.GetButtonUp("Jump") || (state == DriftStates.Drifting && currentSpeed <= 0 && useNewAccel))
                 {
 
                     audio.Stop();
@@ -490,8 +555,6 @@ public class PlayerMovement : NetworkBehaviour
                 currentVelocityALL = hVelocity.magnitude;
                 hVelocity.y = 0;
                 currentVelocityH = hVelocity.magnitude;
-                if (hVelocity.magnitude < topSpeed)
-                {
                     if (currentSpeed > 10)
                     {
                         plrObjRb.AddForce(driveForward * (currentSpeed + boostForce), ForceMode.Acceleration);
@@ -501,7 +564,7 @@ public class PlayerMovement : NetworkBehaviour
                     {
                         plrObjRb.AddForce(driveForward * currentSpeed, ForceMode.Acceleration);
                     }
-                }
+                
 
                 //Turnpointer faces the same way as player kart, but will be turned when drifting to make turning go at an odd angle
                 hVelocity = plrObjRb.linearVelocity;
