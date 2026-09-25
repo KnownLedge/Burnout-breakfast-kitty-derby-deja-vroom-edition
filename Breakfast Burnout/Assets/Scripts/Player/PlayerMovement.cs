@@ -589,12 +589,21 @@ public class PlayerMovement : NetworkBehaviour
 
                 playerDir = driveForward;
 
-                Vector3 correctedHVelocity = Vector3.Lerp(forceDir, playerDir, turnFix).normalized * hVelocity.magnitude;
+                float appliedFix = 0f;
+
+                if (state == DriftStates.Steering && currentSpeed > 0)
+                {
+                    appliedFix = turnFix;
+                }
+
+                    Vector3 correctedHVelocity = Vector3.Lerp(forceDir, playerDir, appliedFix).normalized * hVelocity.magnitude;
 
                 correctedHVelocity /= speedDecay; //Halve the velocity, helps for redirecting it effectively
 
-                plrObjRb.linearVelocity = new Vector3(correctedHVelocity.x, plrObjRb.linearVelocity.y, correctedHVelocity.z);
 
+
+                    plrObjRb.linearVelocity = new Vector3(correctedHVelocity.x, plrObjRb.linearVelocity.y, correctedHVelocity.z);
+                
 
                 Quaternion targetRotation = new Quaternion();
                 targetRotation = Quaternion.Euler(new Vector3(0, plrKart.transform.eulerAngles.y + currentRotate, 0));
