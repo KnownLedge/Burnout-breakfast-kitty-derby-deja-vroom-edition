@@ -327,8 +327,15 @@ public class PlayerMovement : NetworkBehaviour
 
                     plrObjRb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
                     //Drift hop
-                    driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
-                    turnPointer.transform.forward = plrKart.transform.forward;
+                    if (Input.GetAxis("Horizontal") == 0)
+                    {
+                        driftDirection = 0;
+                    }
+                    else
+                    {
+                        driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                    }
+                        turnPointer.transform.forward = plrKart.transform.forward;
                     turnPointer.transform.Rotate(new Vector3(0, driftPivot * driftDirection, 0));
 
                     //VISUAL
