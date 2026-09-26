@@ -773,7 +773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3483557240
+  GlobalObjectIdHash: 1295469194
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -915,7 +915,13 @@ MonoBehaviour:
   acceleration: 150
   topSpeed: 450
   speedDecay: 1.05
+  useNewAccel: 0
+  idleDeccel: 0
+  reverseDeccel: 0
+  reverseTopSpeed: 0
   turnRate: 15
+  turnSpeedLoss: 0
+  turnSpeedLossLimit: 80
   turnFix: 0
   state: 0
   hopTime: 0.001
@@ -940,6 +946,8 @@ MonoBehaviour:
   - 80
   - 100
   boostForce: 60
+  driftTurnFixDelay: 0
+  canWallBump: 0
   visualTurn: -15
   visualIncrement: -10
   rescaleSpeed: 8
@@ -964,6 +972,7 @@ MonoBehaviour:
   driftDirection: -1
   driftCharge: 0
   boostPower: 4.6000032
+  driftEndTurnTimer: 0
   driftRotate: 0
   initScale: {x: 0, y: 0, z: 0}
   intendScale: {x: 0, y: 0, z: 0}
@@ -2323,6 +2332,7 @@ GameObject:
   - component: {fileID: 367045787265059975}
   - component: {fileID: 5676307042381209541}
   - component: {fileID: 351997929620910255}
+  - component: {fileID: 6822719024449179079}
   m_Layer: 0
   m_Name: PlayerObj
   m_TagString: Player
@@ -2607,6 +2617,18 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6822719024449179079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7741296172969844784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7716d60ee23548a458c9f442777cc780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8203359073074519454
 GameObject:
   m_ObjectHideFlags: 0

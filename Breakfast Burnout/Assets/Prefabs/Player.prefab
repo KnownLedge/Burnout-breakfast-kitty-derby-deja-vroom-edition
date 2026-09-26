@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7330303799747496984}
   - component: {fileID: 8048759309286101123}
   - component: {fileID: 4917867604512599614}
+  - component: {fileID: 5636649472057224063}
   m_Layer: 0
   m_Name: PlayerObj
   m_TagString: Player
@@ -300,6 +301,18 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &5636649472057224063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118092939427355276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7716d60ee23548a458c9f442777cc780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &271860668886997846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1744,6 +1757,90 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  playerName:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue:
+      utf8LengthInBytes: 6
+      bytes:
+        offset0000:
+          byte0000: 80
+          byte0001: 108
+          byte0002: 97
+          byte0003: 121
+          byte0004: 101
+          byte0005: 114
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
+  raceStartTimer:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 3
+  raceProgress:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  isNetReady: 0
+  isGroupReadyH: 0
   plrObj: {fileID: 118092939427355276}
   plrKart: {fileID: 8127721057741285870}
   kartModel: {fileID: 2558522085608657152}
@@ -1761,13 +1858,23 @@ MonoBehaviour:
   acceleration: 100
   topSpeed: 450
   speedDecay: 1.05
+  useNewAccel: 0
+  idleDeccel: 0
+  reverseDeccel: 0
+  reverseTopSpeed: 0
   turnRate: 20
+  turnSpeedLoss: 0
+  turnSpeedLossLimit: 80
   turnFix: 0
   state: 0
   hopTime: 0.3
   hopForce: 15
   driftGrav: 40
+  driftForce: 0
   driftPower: 0.5
+  driftPercInfluence: 1
+  driftInfluencePos: 0
+  driftInfluenceNeg: 0
   driftPivot: -15
   driftRequirements:
   - 1.2
@@ -1782,6 +1889,8 @@ MonoBehaviour:
   - 40
   - 70
   boostForce: 60
+  driftTurnFixDelay: 0
+  canWallBump: 0
   visualTurn: -15
   visualIncrement: -20
   rescaleSpeed: 8
@@ -1790,19 +1899,29 @@ MonoBehaviour:
   skinRef: {fileID: 936261008267303258}
   extraGravity: 60
   groundDist: 3
+  freeRoam: 0
   currentSpeed: 0
+  hVelocity: {x: 0, y: 0, z: 0}
+  currentVelocityH: 0
+  currentVelocityALL: 0
   externalBoost: {x: 0, y: 0, z: 0}
   externalBoostSources: 0
+  drivingForward: 1
   currentRotate: 0.0000060846805
   rotate: 0
+  driveForward: {x: 0, y: 0, z: 0}
   canHop: 1
   hopTimer: 0
   driftDirection: -1
   driftCharge: 0
   boostPower: 4.6000032
+  driftEndTurnTimer: 0
   driftRotate: 0
   initScale: {x: 0, y: 0, z: 0}
   intendScale: {x: 0, y: 0, z: 0}
+  raceStarted: 0
+  raceStartTimerLocal: 3
+  reversePointer: {fileID: 0}
 --- !u!114 &7753253496016988814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2803,6 +2922,9 @@ MonoBehaviour:
   Camera: {fileID: 3123606271931828867}
   pivotDist: 2
   pivotSpeed: 1
+  twoPivotSpeeds: 0
+  outPivotSpeed: 0.5
+  inPivotSpeed: 2
   defaultFov: 60
   boostFov: 60
   burstFov:

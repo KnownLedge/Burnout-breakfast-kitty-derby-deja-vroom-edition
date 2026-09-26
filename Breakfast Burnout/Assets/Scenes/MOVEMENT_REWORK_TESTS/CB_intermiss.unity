@@ -205608,11 +205608,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 504064393201406628, guid: c202b6c553dc6f146a5e03e9993a0868,
         type: 3}
-      propertyPath: driftTurnFixDelay
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 504064393201406628, guid: c202b6c553dc6f146a5e03e9993a0868,
-        type: 3}
       propertyPath: uiManagerReference
       value: 
       objectReference: {fileID: 1798483489}

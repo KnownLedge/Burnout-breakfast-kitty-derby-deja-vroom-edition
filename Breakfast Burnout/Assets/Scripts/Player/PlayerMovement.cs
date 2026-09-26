@@ -87,7 +87,14 @@ public class PlayerMovement : NetworkBehaviour
     public float boostForce = 60f;
     public float driftTurnFixDelay = 0f; //counts down when a drift ends, turnFix is only applied when the timer is at 0.
 
-
+    [Header("Collision")]
+    public bool canWallBump = false; //Whether player is able to bump into walls
+    public float wallUpperLimit = 0.9f; //Height limit for bumping into walls (any object hitting up above this height doesn't count as a wall) (1 is maximum)
+    public float wallLowerLimit = 0.9f; //Height limit for bumping into walls (any object hitting down below this height doesn't count as a wall) (1 is maximum)
+    public float wallBumpForce = 10f; //How hard wall bumps hit the player
+    public float wallBumpForceSpeedBoost = 150f; //How much harder the bump hits the player at full speed, if not at full speed, a percentage equivalent is applied instead (so if at half speed, half value is applied)
+    public float wallBumpSpeedPenalty = 25f; //How much currentspeed you lose for hitting a wall
+    public float bumpTurnFixDelay = 0.75f; //How long before turn fix is allowed to be used again after bumping a wall (so bump force isn't redirected forwards)
 
     [Header("Visual")]
 
@@ -131,6 +138,9 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float driftCharge = 0f;
     [SerializeField] private float boostPower = 0f;
     [SerializeField] private float driftEndTurnTimer = 0f;
+
+    //COLLISION
+    [SerializeField] private float bumpTurnTimer = 0f;
 
     //VISUAL
 
@@ -600,7 +610,7 @@ public class PlayerMovement : NetworkBehaviour
 
                 float appliedFix = 0f;
 
-                if (state == DriftStates.Steering && currentSpeed > 0 && driftEndTurnTimer <= 0)
+                if (state == DriftStates.Steering && currentSpeed > 0 && driftEndTurnTimer <= 0 && bumpTurnTimer <= 0)
                 {
                     appliedFix = turnFix;
                 }
@@ -637,6 +647,7 @@ public class PlayerMovement : NetworkBehaviour
 
                 boostPower -= Time.deltaTime;
                 driftEndTurnTimer = Mathf.Clamp(driftEndTurnTimer - Time.deltaTime, 0, 999f);
+                bumpTurnTimer = Mathf.Clamp(driftEndTurnTimer - Time.deltaTime, 0, 999f);
 
 
                 //Gravity
@@ -718,6 +729,30 @@ public class PlayerMovement : NetworkBehaviour
         plrObjRb.linearVelocity = Vector3.zero;
         plrObjRb.angularVelocity = Vector3.zero;
         //Reset spin
+    }
+
+    public void playerOBJOnCollisionEnter(Collision collision)
+    {
+        Vector3 contactNormal = collision.contacts[0].normal;
+        Debug.Log("NEWCOLLISION: " + contactNormal);
+        if (canWallBump)
+        {
+            if (contactNormal.y > -wallUpperLimit && contactNormal.y < wallLowerLimit)
+            {
+                float boostBump = wallBumpForceSpeedBoost * Mathf.InverseLerp(0, topSpeed, currentSpeed);
+                plrObjRb.AddForceAtPosition(contactNormal * (wallBumpForce + boostBump), plrObj.transform.position + contactNormal);
+                Debug.Log("WALLBUMPED");
+                if(Mathf.Abs(currentSpeed) - wallBumpSpeedPenalty < 0)
+                {
+                    currentSpeed = 0;
+                }
+                else
+                {
+                    currentSpeed -= wallBumpSpeedPenalty * Mathf.Sign(currentSpeed);
+                }
+                    bumpTurnTimer = bumpTurnFixDelay; //Disable turn fix so it doesn't the wall bump to the players facing direction for a moment
+            }
+        }
     }
 
     public void OnTriggerEnter(Collider other)
