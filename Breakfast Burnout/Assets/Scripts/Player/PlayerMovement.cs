@@ -85,6 +85,7 @@ public class PlayerMovement : NetworkBehaviour
     public float[] boostStrengths = { 5, 8, 10 };
     public float[] boostBursts = { 5, 8, 10 };
     public float boostForce = 60f;
+    public float driftTurnFixDelay = 0f; //counts down when a drift ends, turnFix is only applied when the timer is at 0.
 
 
 
@@ -129,6 +130,7 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private int driftDirection;
     [SerializeField] private float driftCharge = 0f;
     [SerializeField] private float boostPower = 0f;
+    [SerializeField] private float driftEndTurnTimer = 0f;
 
     //VISUAL
 
@@ -350,7 +352,7 @@ public class PlayerMovement : NetworkBehaviour
                     turnPointer.transform.forward = plrKart.transform.forward;
                     kartModel.transform.forward = plrKart.transform.forward;
 
-
+                    driftEndTurnTimer = driftTurnFixDelay;
 
                     DriftBoost();
                     //Activate DriftBoost
@@ -591,7 +593,7 @@ public class PlayerMovement : NetworkBehaviour
 
                 float appliedFix = 0f;
 
-                if (state == DriftStates.Steering && currentSpeed > 0)
+                if (state == DriftStates.Steering && currentSpeed > 0 && driftEndTurnTimer <= 0)
                 {
                     appliedFix = turnFix;
                 }
@@ -627,6 +629,8 @@ public class PlayerMovement : NetworkBehaviour
                 }
 
                 boostPower -= Time.deltaTime;
+                driftEndTurnTimer = Mathf.Clamp(driftEndTurnTimer - Time.deltaTime, 0, 999f);
+
 
                 //Gravity
                 plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
