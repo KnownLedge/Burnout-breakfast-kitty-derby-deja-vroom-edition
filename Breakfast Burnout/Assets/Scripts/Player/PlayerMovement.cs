@@ -395,11 +395,12 @@ public class PlayerMovement : NetworkBehaviour
                         else
                         {
                             driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
-                        }
-                        //Get drift direction to hold throughout drift
 
-                        turnPointer.transform.forward = plrKart.transform.forward;
-                        turnPointer.transform.Rotate(new Vector3(0, driftPivot * driftDirection, 0));
+                            //Get drift direction to hold throughout drift
+
+                            turnPointer.transform.forward = plrKart.transform.forward;
+                            turnPointer.transform.Rotate(new Vector3(0, driftPivot * driftDirection, 0));
+                        }
 
                         //Visual
                         driftRotate = 0f;
