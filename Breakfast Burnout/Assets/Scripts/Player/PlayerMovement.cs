@@ -750,7 +750,7 @@ public class PlayerMovement : NetworkBehaviour
                 {
                     currentSpeed -= wallBumpSpeedPenalty * Mathf.Sign(currentSpeed);
                 }
-                    bumpTurnTimer = bumpTurnFixDelay; //Disable turn fix so it doesn't the wall bump to the players facing direction for a moment
+                    bumpTurnTimer = bumpTurnFixDelay; //Disable turn fix so it doesn't t wall bump to the players facing direction for a moment
             }
         }
     }
