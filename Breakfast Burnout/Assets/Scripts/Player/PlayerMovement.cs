@@ -113,6 +113,7 @@ public class PlayerMovement : NetworkBehaviour
     public bool harsherGravity = false; //Whether to use VelocityChange instead of acceleration
     public float groundDist = 3f;
     public bool freeRoam = false; //Skips race start phase if true
+    public float inputDeadzone = 0.45f;
 
     [Header("DEBUG")]
     //SPEED
@@ -338,7 +339,7 @@ public class PlayerMovement : NetworkBehaviour
 
                     plrObjRb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
                     //Drift hop
-                    if (Input.GetAxis("Horizontal") == 0)
+                    if (Input.GetAxisRaw("Horizontal") < inputDeadzone && Input.GetAxisRaw("Horizontal") > -inputDeadzone)
                     {
                         driftDirection = 0;
                     }
@@ -387,7 +388,7 @@ public class PlayerMovement : NetworkBehaviour
                         state = DriftStates.Drifting;
                         Debug.Log("DRifting now!");
                         //Then start a drift
-                        if (Input.GetAxis("Horizontal") == 0)
+                        if (Input.GetAxisRaw("Horizontal") < inputDeadzone && Input.GetAxisRaw("Horizontal") > -inputDeadzone)
                         {
                             driftDirection = 0;
                         }
