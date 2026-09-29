@@ -387,7 +387,14 @@ public class PlayerMovement : NetworkBehaviour
                         state = DriftStates.Drifting;
                         Debug.Log("DRifting now!");
                         //Then start a drift
-                        driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                        if (Input.GetAxis("Horizontal") == 0)
+                        {
+                            driftDirection = 0;
+                        }
+                        else
+                        {
+                            driftDirection = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                        }
                         //Get drift direction to hold throughout drift
 
                         turnPointer.transform.forward = plrKart.transform.forward;
