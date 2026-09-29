@@ -1819,11 +1819,11 @@ MonoBehaviour:
   turnRate: 17.5
   turnSpeedLoss: 140
   turnSpeedLossLimit: 90
-  turnFix: 0
+  turnFix: 0.25
   state: 0
   hopTime: 0.001
   hopForce: 15
-  driftGrav: 40
+  driftGrav: 0.05
   driftForce: -12.5
   driftPower: 0.6
   driftPercInfluence: 1
@@ -1857,7 +1857,8 @@ MonoBehaviour:
   hopStretch: {x: 0.8, y: 1.5, z: 0.8}
   driftSquash: {x: 1, y: 0.8, z: 1}
   skinRef: {fileID: 1575735389246230541}
-  extraGravity: 60
+  extraGravity: 1.5
+  harsherGravity: 1
   groundDist: 3
   freeRoam: 0
   currentSpeed: 0

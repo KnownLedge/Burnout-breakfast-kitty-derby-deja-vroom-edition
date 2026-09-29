@@ -110,6 +110,7 @@ public class PlayerMovement : NetworkBehaviour
 
     [Header("MISC")]
     public float extraGravity = 9.8f;
+    public bool harsherGravity = false; //Whether to use VelocityChange instead of acceleration
     public float groundDist = 3f;
     public bool freeRoam = false; //Skips race start phase if true
 
@@ -640,7 +641,14 @@ public class PlayerMovement : NetworkBehaviour
 
                     if (hopTimer > hopTime)
                     {
-                        plrObjRb.AddForce(Vector3.down * driftGrav, ForceMode.Acceleration);
+                        if (harsherGravity)
+                        {
+                            plrObjRb.AddForce(Vector3.down * driftGrav, ForceMode.VelocityChange);
+                        }
+                        else
+                        {
+                            plrObjRb.AddForce(Vector3.down * driftGrav, ForceMode.Acceleration);
+                        }
                         //Apply extra force to keep player to floor while drifting
                     }
                 }
@@ -651,10 +659,16 @@ public class PlayerMovement : NetworkBehaviour
 
 
                 //Gravity
-                plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
-
-                //Visual squash and stretch
-                kartModel.transform.localScale = Vector3.Lerp(kartModel.transform.localScale, intendScale, Time.deltaTime * rescaleSpeed);
+                if (harsherGravity)
+                {
+                    plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.VelocityChange);
+                }
+                else
+                {
+                    plrObjRb.AddForce(Vector3.down * extraGravity, ForceMode.Acceleration);
+                }
+                    //Visual squash and stretch
+                    kartModel.transform.localScale = Vector3.Lerp(kartModel.transform.localScale, intendScale, Time.deltaTime * rescaleSpeed);
 
                 if (boostPower < 0)
                 {
