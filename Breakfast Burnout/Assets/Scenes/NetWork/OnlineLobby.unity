@@ -2065,7 +2065,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1950257535}
+      - m_Target: {fileID: 891879352}
         m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
         m_MethodName: LeaveLobby
         m_Mode: 1
@@ -2463,7 +2463,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1950257535}
+      - m_Target: {fileID: 891879352}
         m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
         m_MethodName: CreateLobby
         m_Mode: 1
@@ -2873,7 +2873,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1950257535}
+      - m_Target: {fileID: 891879352}
         m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
         m_MethodName: ListLobbies
         m_Mode: 1
@@ -5280,6 +5280,84 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1742141729}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &891879351
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 891879353}
+  - component: {fileID: 891879352}
+  m_Layer: 0
+  m_Name: LobbySetup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &891879352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891879351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db8806f4919cca4e9eddc80d41931e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: 
+  IconID: 0
+  ColorID: 0
+  playerNameInputField: {fileID: 1252833319}
+  lobbyUIDistance: 70
+  lobbyList: {fileID: 1437222836}
+  lobbyUI: {fileID: 7579550823175716184, guid: 01d6cb871af3c6a42904580bb094a761, type: 3}
+  createLobbyButton: {fileID: 273602918}
+  joinedLobbyUI: {fileID: 1359480838}
+  joinedLobbyPlayerNames:
+  - {fileID: 28705591}
+  - {fileID: 1877427245}
+  - {fileID: 2083625120}
+  - {fileID: 1405411105}
+  - {fileID: 2116063482}
+  - {fileID: 824853201}
+  joinedLobbyPlayerBackground:
+  - {fileID: 1387680371}
+  - {fileID: 1763137692}
+  - {fileID: 1212794870}
+  - {fileID: 1314865771}
+  - {fileID: 39058113}
+  - {fileID: 2099262970}
+  joinedLobbyPlayerIcons:
+  - {fileID: 526566435}
+  - {fileID: 167287842}
+  - {fileID: 689517265}
+  - {fileID: 503290315}
+  - {fileID: 53091110}
+  - {fileID: 955720169}
+  customizationInfo: {fileID: 1381284750}
+  maxLobbyPlayerId: 5
+  defaultGameScene: NETWORKRACESCENE
+  relayScript: {fileID: 1950257537}
+--- !u!4 &891879353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891879351}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -113.679726, y: 183.80269, z: 247.52702}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &898370645
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8156,7 +8234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UiHolder: {fileID: 1381284748}
   lobbyUI: {fileID: 2084630657}
-  lobbyRef: {fileID: 1950257535}
+  lobbyRef: {fileID: 891879352}
   playerName: Player
   PlayerIconId: 0
   playerIconColorId: 0
@@ -9037,7 +9115,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1950257535}
+      - m_Target: {fileID: 891879352}
         m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
@@ -10709,7 +10787,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1950257535}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
         m_MethodName: ReturnToMenu
         m_Mode: 1
@@ -11557,7 +11635,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1950257536}
-  - component: {fileID: 1950257535}
   - component: {fileID: 1950257537}
   - component: {fileID: 1950257538}
   - component: {fileID: 1950257539}
@@ -11569,52 +11646,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1950257535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1950257534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db8806f4919cca4e9eddc80d41931e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerName: 
-  IconID: 0
-  ColorID: 0
-  playerNameInputField: {fileID: 1252833319}
-  lobbyUIDistance: 70
-  lobbyList: {fileID: 1437222836}
-  lobbyUI: {fileID: 7579550823175716184, guid: 01d6cb871af3c6a42904580bb094a761, type: 3}
-  createLobbyButton: {fileID: 273602918}
-  joinedLobbyUI: {fileID: 1359480838}
-  joinedLobbyPlayerNames:
-  - {fileID: 28705591}
-  - {fileID: 1877427245}
-  - {fileID: 2083625120}
-  - {fileID: 1405411105}
-  - {fileID: 2116063482}
-  - {fileID: 824853201}
-  joinedLobbyPlayerBackground:
-  - {fileID: 1387680371}
-  - {fileID: 1763137692}
-  - {fileID: 1212794870}
-  - {fileID: 1314865771}
-  - {fileID: 39058113}
-  - {fileID: 2099262970}
-  joinedLobbyPlayerIcons:
-  - {fileID: 526566435}
-  - {fileID: 167287842}
-  - {fileID: 689517265}
-  - {fileID: 503290315}
-  - {fileID: 53091110}
-  - {fileID: 955720169}
-  customizationInfo: {fileID: 1381284750}
-  maxLobbyPlayerId: 5
-  defaultGameScene: NETWORKRACESCENE
-  relayScript: {fileID: 1950257537}
 --- !u!4 &1950257536
 Transform:
   m_ObjectHideFlags: 0
@@ -13381,3 +13412,4 @@ SceneRoots:
   - {fileID: 1771791671}
   - {fileID: 107977806}
   - {fileID: 1383319232}
+  - {fileID: 891879353}

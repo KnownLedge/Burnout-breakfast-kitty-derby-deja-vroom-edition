@@ -36,6 +36,11 @@ public class NetworkPlayerCustomization : MonoBehaviour
         }
     }
 
+    public void UpdateName(string newName) //Override for rejoining lobby screen
+    {
+        playerName = newName;
+    }
+
     public void UpdateIcon(int id)
     {
         PlayerIconId = id;

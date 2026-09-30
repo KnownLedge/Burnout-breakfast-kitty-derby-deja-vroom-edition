@@ -56,24 +56,61 @@ public class LobbyScript : MonoBehaviour
 
     private string KEY_START_GAME = "0";
 
-    private string lobbyCode;
+    private static string lobbyCode;
 
     private async void Start()
     {
-        NetworkInfo.PLAYING_ONLINE = true;
-        playerName = "Player" + UnityEngine.Random.Range(10, 99); //Placeholder player name incase player avoids setting it somehow
-
-        await UnityServices.InitializeAsync();
-
-
-        AuthenticationService.Instance.SignedIn += () =>
+        if (lobbyCode == null)
         {
-            Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
-        };
 
-        await AuthenticationService.Instance.SignInAnonymouslyAsync(); //makes new account
+            NetworkInfo.PLAYING_ONLINE = true;
+            playerName = "Player" + UnityEngine.Random.Range(10, 99); //Placeholder player name incase player avoids setting it somehow
 
-        Debug.Log(playerName);
+            await UnityServices.InitializeAsync();
+
+
+            AuthenticationService.Instance.SignedIn += () =>
+            {
+                Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
+            };
+
+            await AuthenticationService.Instance.SignInAnonymouslyAsync(); //makes new account
+
+            Debug.Log(playerName);
+        }
+        else
+        {
+            customizationInfo.UpdateColor(gameColorID);
+            customizationInfo.UpdateIcon(gameIconID);
+            customizationInfo.UpdateName(gamePlayerName);
+
+            customizationInfo.CompleteCustomization();
+
+
+           // createLobbyButton.SetActive(false);
+          //  lobbyList.SetActive(false);
+          //  joinedLobbyUI.SetActive(true);
+
+            KEY_START_GAME ="0";
+
+            try
+            {
+               // currentLobby = await LobbyService.Instance.GetLobbyAsync(lobbyCode);
+
+                if (currentLobby != null)
+                {
+                    UpdateJoinedLobbyUI(currentLobby);
+                }
+                else
+                {
+                    Debug.Log("ISSUE: Current lobby doesn't exists as a variable");
+                }
+            }
+            catch (LobbyServiceException e)
+            {
+                Debug.Log(e);
+            }
+        }
     }
 
     private async void HandleLobbyHeartBeat()

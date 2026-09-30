@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -91,7 +92,17 @@ public class ResultsScreen : MonoBehaviour
                 if (Vector3.Distance(standingsObj.localPosition, startPos) < 9)
                 {
                     FLScript.shouldFill = false;
-                    if (checkRef.raceResults[0] == 5)
+                    if (NetworkInfo.PLAYING_ONLINE)
+                    {
+                        if (NetworkManager.Singleton.IsHost) {
+                            NetworkManager.Singleton.Shutdown();
+                        }
+                        else { 
+                        NetworkManager.Singleton.DisconnectClient(NetworkManager.Singleton.LocalClientId);
+                        }
+                        Destroy(NetworkManager.Singleton.gameObject);
+                        SceneManager.LoadScene("OnlineLobby");
+                    } else if (checkRef.raceResults[0] == 5)
                     {
                         SceneManager.LoadScene("WinMenu");
                     }
