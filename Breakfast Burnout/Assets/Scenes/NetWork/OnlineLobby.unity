@@ -5313,11 +5313,12 @@ MonoBehaviour:
   IconID: 0
   ColorID: 0
   playerNameInputField: {fileID: 1252833319}
-  lobbyUIDistance: 70
+  lobbyUIDistance: 120
   lobbyList: {fileID: 1437222836}
   lobbyUI: {fileID: 7579550823175716184, guid: 01d6cb871af3c6a42904580bb094a761, type: 3}
   createLobbyButton: {fileID: 273602918}
   joinedLobbyUI: {fileID: 1359480838}
+  startLobbyButton: {fileID: 1567575117}
   joinedLobbyPlayerNames:
   - {fileID: 28705591}
   - {fileID: 1877427245}
@@ -7818,7 +7819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1437222837}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -7831,7 +7832,7 @@ MonoBehaviour:
   m_HorizontalScrollbarVisibility: 2
   m_VerticalScrollbarVisibility: 2
   m_HorizontalScrollbarSpacing: -3
-  m_VerticalScrollbarSpacing: -3
+  m_VerticalScrollbarSpacing: -12
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

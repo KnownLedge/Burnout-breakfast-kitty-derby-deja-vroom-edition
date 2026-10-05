@@ -39,6 +39,7 @@ public class LobbyScript : MonoBehaviour
     [SerializeField] private GameObject createLobbyButton;
 
     [SerializeField] private GameObject joinedLobbyUI;
+    [SerializeField] private GameObject startLobbyButton;
     [SerializeField] private List<TMP_Text> joinedLobbyPlayerNames;
     [SerializeField] private List<Image> joinedLobbyPlayerBackground;
     [SerializeField] private List<Image> joinedLobbyPlayerIcons;
@@ -223,6 +224,7 @@ public class LobbyScript : MonoBehaviour
             createLobbyButton.SetActive(false);
             lobbyList.SetActive(false);
             joinedLobbyUI.SetActive(true);
+            startLobbyButton.SetActive(true);
             UpdateJoinedLobbyUI(lobby);
         }
         catch (LobbyServiceException e)
@@ -358,6 +360,7 @@ public class LobbyScript : MonoBehaviour
             createLobbyButton.SetActive(false);
             lobbyList.SetActive(false);
             joinedLobbyUI.SetActive(true);
+            startLobbyButton.SetActive(false);
             UpdateJoinedLobbyUI(joinLobby);
         }
         catch (LobbyServiceException e)
